@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
   TextInput,
-  Button,
+  TouchableOpacity,
   StyleSheet,
-  Alert,
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { API_URL } from "../api";
+import { colors } from "../themes/colors";
+import Alert from "@blazejkustra/react-native-alert";
 
 import * as SecureStore from "expo-secure-store";
 
@@ -17,54 +18,6 @@ export default function AdminLoginScreen() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-
-  // useEffect(() => {
-  //     navigation.replace("AdminDashboard");
-  // }, []);
-
-  // const handleLogin = async () => {
-  //     if(!password) {
-  //         Alert.alert("Error", "YOU SHALL NOT PASS");
-  //         return;
-  //     }
-
-  //     try {
-  //         setLoading(true);
-  //         console.log("Attempting admin login");
-  //         console.log("API URL:", API_URL);
-
-  //         const response = await fetch(`${API_URL}/api/admin/login`, {
-  //             method: 'POST',
-  //             headers: {
-  //                 'Content-Type': 'application/json',
-  //             },
-  //             body: JSON.stringify({ password }),
-  //         });
-
-  //         console.log("Response status:", response.status);
-
-  //         const data = await response.json();
-
-  //         if(!response.ok) {
-  //             throw new Error(data.error || 'Uh oh! Login failed.');
-  //         }
-
-  //         if(!data.token) {
-  //             throw new Error('No token received from server');
-  //         }
-
-  //         await SecureStore.setItemAsync('adminToken', data.token);
-
-  //         Alert.alert("Success", "Logged in as admin!");
-
-  //         navigation.navigate("AdminDashboard");
-  //     } catch (error) {
-  //         // console.log("Login error:", error.message);
-  //         Alert.alert("Login Failed", error.message);
-  //     } finally {
-  //         setLoading(false);
-  //     }
-  // };
 
   const handleLogin = async () => {
     let token;
@@ -95,32 +48,72 @@ export default function AdminLoginScreen() {
       setLoading(false);
     }
 
-    // 🔥 Everything above succeeded — now do side effects
-
     if (Platform.OS !== "web") {
       await SecureStore.setItemAsync("adminToken", token);
     } else {
       localStorage.setItem("adminToken", token);
     }
 
-    // 🔥 Navigate OUTSIDE the try/catch
-    navigation.navigate("AdminDashboard");
+    navigation.replace("AdminDashboard");
   };
 
   return (
-    <View>
-      <Text>Admin Login</Text>
+    <View style={styles.container}>
       <TextInput
-        placeholder="Enter admin password"
+        placeholder="Enter password"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
+        style={styles.passwordInput}
       />
-      <Button
-        title={!!loading ? "Gimme a sec" : "Login"}
+      <TouchableOpacity
         onPress={handleLogin}
         disabled={!!loading}
-      />
+        style={styles.loginButton}
+      >
+        <Text
+          style={{
+            fontFamily: "Montserrat",
+            fontWeight: 400,
+            fontSize: 16,
+            color: "#fff",
+          }}
+        >
+          {loading ? "Gimme a sec" : "Login"}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundImage: `linear-gradient(to bottom, ${colors.CSPblue} 5%, ${colors.CSPgreen} 90%)`,
+    height: "100%",
+    width: "100%",
+    alignItems: "center",
+    padding: 30,
+    gap: 20,
+  },
+  passwordInput: {
+    height: 40,
+    borderColor: colors.CSPgreen,
+    borderWidth: 2,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+    fontFamily: "Montserrat",
+    fontWeight: 400,
+    fontSize: 14,
+    width: "40%",
+    color: "#000",
+    backgroundColor: "#fff",
+  },
+  loginButton: {
+    backgroundColor: colors.CSPgreen,
+    padding: 5,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "40%",
+  },
+});

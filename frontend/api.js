@@ -1,3 +1,5 @@
+//this is mid practice but whatever
+
 import { Platform } from "react-native";
 
 export const API_URL =

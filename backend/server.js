@@ -6,20 +6,22 @@ import adminRoutes from "./routes/adminRoutes.js";
 import { requireAdmin } from "./middleware/adminAuthorization.js";
 
 dotenv.config();
-  
+
 const PORT = process.env.PORT || 3000;
 const app = express();
 
 // Middleware
 // app.use(cors({ origin: 'http://your-frontend-domain.com' })); // Restrict to specific origin
-app.use(cors({
-  origin: '*', // Allow all origins (for development only)
-}));
+app.use(
+  cors({
+    origin: "*", // Allow all origins (for development only)
+  }),
+);
 app.use(express.json()); // Parse JSON bodies
 
 // Test route
 app.get("/", (req, res) => {
-  res.json({ message: "Backend is running 🚀" });
+  res.json({ message: "Backend is running!" });
 });
 
 // // Example API route
@@ -29,9 +31,11 @@ app.get("/", (req, res) => {
 
 app.use("/api/admin", adminRoutes);
 
-app.post("/api/admin/protected", requireAdmin, (req, res) => {
-  res.json({ message: "Hello Admin!" });
-});
+// app.post("/api/admin/protected", requireAdmin, (req, res) => {
+//   res.json({ message: "Hello Admin!" });
+// });
+
+// app.post("/api/admin/update-schedule", requireAdmin, (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
