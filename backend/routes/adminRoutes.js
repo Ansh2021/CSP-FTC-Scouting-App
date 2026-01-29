@@ -2,7 +2,10 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { requireAdmin } from "../middleware/adminAuthorization.js";
-import { getSchedule } from "../ftcscoutapi/ftcscoutcontroller.js";
+import {
+  getSchedule,
+  getTeamStats,
+} from "../ftcscoutapi/ftcscoutcontroller.js";
 
 const router = express.Router();
 
@@ -34,8 +37,10 @@ router.post("/update-schedule", requireAdmin, async (req, res) => {
   try {
     const { year, eventCode } = req.body;
 
-    if (!year || !eventCode) {
-      return res.status(400).json("Missing parameter(s).");
+    if (!year) {
+      return res.status(400).json("Missing schedule year parameter.");
+    } else if (!eventCode) {
+      return res.status(400).json("Missing schedule event code parameter.");
     }
 
     const schedule = await getSchedule(year, eventCode);
@@ -54,20 +59,30 @@ router.post("/update-schedule", requireAdmin, async (req, res) => {
   }
 });
 
-// router.post("/update-schedule", (req, res) => {
-//   const schedule = [
-//     { match: 1, red: [111, 222], blue: [333, 444] },
-//     { match: 2, red: [555, 666], blue: [777, 888] },
-//   ];
+router.post("/team-stats", requireAdmin, async (req, res) => {
+  try {
+    const { number, season } = req.body;
 
-//   res.json({
-//     success: true,
-//     schedule,
-//   });
-// });
+    if (!number) {
+      return res.status(400).json({ error: "Missing team number parameter." });
+    } else if (!season) {
+      return res.status(400).json({ error: "Missing team season parameter." });
+    }
 
-router.post("/team-stats", requireAdmin, (req, res) => {
-  console.log("not yet");
+    const stats = await getTeamStats(number, season);
+
+    res.json({
+      message: "Team stats triggered",
+      number,
+      season,
+      stats,
+    });
+
+    console.log("Team stats request body:", req.body);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server error" });
+  }
 });
 
 export default router;

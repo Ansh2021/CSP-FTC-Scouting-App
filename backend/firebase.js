@@ -14,7 +14,7 @@ if (!admin.apps.length) {
   });
 }
 
-export const db = admin.firestore();
+const db = admin.firestore();
 
 // db.enablePersistence({
 //   synchronizeTabs: true,
@@ -131,3 +131,201 @@ class CachedEmitter {
     await this.batch.commit();
   }
 }
+
+class CachedListener {
+  constructor() {
+    this.collection = null;
+    this.referencedDocs = [];
+    this.queryFilters = [];
+    this.limits = null;
+    this.orders = [];
+    this.givenID = [];
+  }
+
+  /**
+   * Opens the collection provided.
+   * @param {string} collectionName
+   * @returns An updated Cached Listener
+   */
+  open(collectionName) {
+    this.collection = collectionName;
+    console.log("open");
+    return this;
+  }
+  /**
+   * Adds a document ID to the referenced queries.
+   * @param  {...string} docList
+   * @returns An updated Cached Listener
+   */
+  addDocID(...docList) {
+    this.givenID = this.givenID.concat(docList);
+    return this;
+  }
+
+  /**
+   * Adds a document reference to the referenced queries.
+   * @param  {...string} docList
+   * @returns An updated Cached Listener
+   */
+  addReference(...docList) {
+    this.referencedDocs = this.referencedDocs.concat(docList);
+    return this;
+  }
+  /**
+   * Orders results based on attribute and order direction.
+   * @param {string} attribute
+   * @param {string} orderDir
+   * @returns An updated Cached Listener
+   */
+  order(attribute, orderDir) {
+    this.orders.push({ attribute, orderDir });
+    return this;
+  }
+  /**
+   * Filters results based on attribute and condition.
+   * @param {string} attribute
+   * @param {string} condition
+   * @param {string} value
+   * @returns An updated Cached Listener
+   */
+  find(attribute, condition, value) {
+    this.queryFilters.push({ attribute, condition, value });
+    console.log("find");
+    return this;
+  }
+
+  /**
+   * Limits results to a certain number.
+   * @param {integer} number
+   * @returns An updated Cached Listener
+   */
+  // limit(number) {
+  //     this.limit = number;
+  //     return this;
+  // }
+
+  /**
+   * Returns all document references, asynchronously.
+   * @returns All document references that have been queried.
+   */
+  async getAllReferences() {
+    let object = db.collection(this.collection);
+
+    this.queryFilters.forEach((filter) => {
+      object = object.where(filter.attribute, filter.condition, filter.value);
+    });
+
+    this.orders.forEach((order) => {
+      object = object.orderBy(order.attribute, order.orderDir);
+    });
+
+    let querySnapshot = await object.get();
+
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id);
+      this.referencedDocs.push(doc);
+    });
+
+    this.givenID.forEach((doc) => {
+      this.referencedDocs.push(db.collection(this.collection).doc(doc));
+    });
+
+    return this.referencedDocs;
+  }
+
+  /**
+   * Returns all document IDs, asynchronously.
+   * @returns All document IDs that have been queried.
+   */
+  async getAllIDs() {
+    let object = db.collection(this.collection);
+
+    this.queryFilters.forEach((filter) => {
+      object = object.where(filter.attribute, filter.condition, filter.value);
+    });
+
+    this.orders.forEach((order) => {
+      object = object.orderBy(order.attribute, order.orderDir);
+    });
+
+    let querySnapshot = await object.get();
+
+    querySnapshot.forEach((doc) => {
+      this.givenID.push(doc.id);
+    });
+
+    this.referencedDocs.forEach((doc) => {
+      this.givenID.push(doc.id);
+    });
+
+    return this.givenID;
+  }
+
+  /**
+   * Returns data from referenced queries, and can be further focused on specific attributes.
+   * @param  {string} attributesList
+   * @returns Returns data from all referenced queries.
+   */
+  async return(...attributesList) {
+    let array = [];
+    let object = db.collection(this.collection);
+
+    this.queryFilters.forEach((filter) => {
+      object = object.where(filter.attribute, filter.condition, filter.value);
+      console.log("queryFilter");
+      console.log(filter);
+    });
+
+    this.orders.forEach((order) => {
+      object = object.orderBy(order.attribute, order.orderDir);
+    });
+
+    // if (this.limit !== null) object = object.limit(this.limit);
+
+    console.log(object);
+    console.log(await object.get());
+    let querySnapshot = await object.get();
+    console.log(querySnapshot.empty);
+
+    querySnapshot.forEach((doc) => {
+      array.push(doc.data());
+      console.log("array push");
+    });
+
+    this.referencedDocs.forEach((doc) => {
+      array.push(doc.data());
+    });
+
+    this.givenID.forEach(async (doc) => {
+      let docRef = await db.collection(this.collection).doc(doc).get();
+      array.push(docRef.data());
+    });
+
+    if (attributesList.length == 0) {
+      console.log("working");
+      return array;
+    } else {
+      let revisedArray = [];
+      array.forEach((doc) => {
+        let revisedDoc = {};
+        attributesList.forEach((attr) => {
+          revisedDoc[attr] = doc[attr];
+        });
+        revisedArray.push(revisedDoc);
+      });
+      return revisedArray;
+    }
+  }
+}
+
+// priyanshu says js time :3
+
+function addEmitter() {
+  return new CachedEmitter();
+}
+
+function addListener() {
+  return new CachedListener();
+}
+
+export { db, addEmitter, addListener };

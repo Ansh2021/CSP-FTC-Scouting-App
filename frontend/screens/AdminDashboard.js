@@ -94,19 +94,36 @@ export default function AdminDashboard() {
   };
 
   const handleGetTeamStats = async () => {
-    //   if(!teamNumber) {
-    //     Alert.alert("Error", "Please enter a team number.");
-    //     return;
-    //   }
-    //   console.log("Statistics requested for team:", teamNumber);
-    //   const response = await fetch(`${API_URL}/api/admin/team-stats`, {
-    //     method: "POST",
-    //     headers: {
-    //       Authorization: `Bearer ${adminToken}`,
-    //       "Content-Type": "application/json",
-    //     },
-    //     body:
-    //   })
+    if (!teamNumber) {
+      Alert.alert("Error", "Please enter a team number.");
+      return;
+    }
+    console.log("Stats requested for team:", teamNumber);
+
+    const response = await fetch(`${API_URL}/api/admin/team-stats`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${adminToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        number: teamNumber,
+        season: year,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      Alert.alert("Error", data.error || "Failed to get team stats.");
+      return;
+    }
+
+    Alert.alert("Success", "Team stats fetched successfully.");
+
+    console.log("Response status", response.status);
+    console.log("Team Stats", data);
+    console.log(Object.keys(data));
   };
 
   const handleLogout = async () => {

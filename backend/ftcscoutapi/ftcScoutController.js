@@ -28,26 +28,36 @@ export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
   }));
 
   console.log(matches);
+  db.addEmitter()
+    .open("schedule")
+    .delete()
+    .commit()
+    .then(() => {
+      matches.forEach((match) =>
+        db.addEmitter().open("schedule").add(match).commit(),
+      );
+    });
   return matches;
   //TODO: add firebase here
 }
 
-// export async function getTeamStats(req, res) {
-//     try {
-//         const {number, season} = req.body;
+export async function getTeamStats(number, season) {
+  const { data } = await ftcScoutClient.query({
+    query: GET_TEAM_STATS,
+    variables: {
+      number: Number(number),
+      season: Number(season),
+    },
+  });
 
-//         if(!number) {
-//             return res.status(400).json({error: "Missing team number."});
-//         } else if(!season) {
-//             return res.status(400).json({error: "Missing season year."});
-//         }
+  return {
+    name: data.teamByNumber.name,
+    schoolName: data.teamByNumber.schoolName,
+    autoOPR: data.teamByNumber.quickStats.auto.value,
+    teleOPR: data.teamByNumber.quickStats.dc.value,
+    totalOPR: data.teamByNumber.quickStats.tot.value,
+  };
 
-//         const {data} = await ftcScoutClient.query({
-//             query: GET_TEAM_STATS,
-//             variables: {
-//                 number: Number(number),
-//                 season: Number(season),
-//             },
-//         });
-//     }
-// }
+  console.log(stats);
+  return stats;
+}
