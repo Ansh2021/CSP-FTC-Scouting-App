@@ -13,7 +13,7 @@
     "frontend-web": "cd frontend && npm run web",
     "frontend-android": "cd frontend && npm run android",
     "frontend-ios": "cd frontend && npm run ios",
-    "dev": "concurrently \"npm run dev -w frontend\" \"npm run dev -w backend\"",
+    "dev": "concurrently --kill-others \"npm run dev -w frontend\" \"npm run dev -w backend\"",
     "dev-web": "concurrently \"npm run dev -w backend\" \"npm run web -w frontend\"",
     "dev-android": "concurrently \"npm run dev -w backend\" \"npm run android -w frontend\"",
     "dev-ios": "concurrently \"npm run dev -w backend\" \"npm run ios -w frontend\"",

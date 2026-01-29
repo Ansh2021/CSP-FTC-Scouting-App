@@ -34,6 +34,8 @@ export default function AdminDashboard() {
   const navigation = useNavigation();
 
   const [eventCode, setEventCode] = useState("");
+  const [year, setYear] = useState(2025); //the year the season started (2025 for decode)
+  const [teamNumber, setTeamNumber] = useState("");
 
   useEffect(() => {
     const verifyAdmin = async () => {
@@ -58,51 +60,53 @@ export default function AdminDashboard() {
     verifyAdmin();
   }, []);
 
-  const handleAdminAction = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/admin/protected`, {
-        METHOD: "POST",
-        headers: {
-          Authorization: `Bearer ${adminToken}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Action failed. Uhoh.");
-      }
-
-      Alert.alert("Success", data.message);
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    }
-  };
-
-  const handleScheduleUpdate = () => {
+  const handleScheduleUpdate = async () => {
     if (!eventCode) {
       Alert.alert("Error", "Please enter an event code.");
       return;
     }
     console.log("Schedule update requested for event code:", eventCode);
 
-    // const response = await fetch(`${API_URL}/api/admin/update-schedule`, {
-    //   METHOD: "POST",
-    //   headers: {
-    //     Authorization: `Bearer ${adminToken}`,
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ eventCode }),
-    // });
+    const response = await fetch(`${API_URL}/api/admin/update-schedule`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${adminToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        year,
+        eventCode,
+      }),
+    });
 
-    // const data = await response.json();
+    const data = await response.json();
 
-    // if (!response.ok) {
-    //   Alert.alert("Error", data.error || "Failed to update schedule.");
-    //   return;
-    // }
+    if (!response.ok) {
+      Alert.alert("Error", data.error || "Failed to update schedule.");
+      return;
+    }
 
     Alert.alert("Success", "Schedule updated successfully.");
+
+    console.log("Response status", response.status);
+    console.log("Schedule", data);
+    console.log(Object.keys(data));
+  };
+
+  const handleGetTeamStats = async () => {
+    //   if(!teamNumber) {
+    //     Alert.alert("Error", "Please enter a team number.");
+    //     return;
+    //   }
+    //   console.log("Statistics requested for team:", teamNumber);
+    //   const response = await fetch(`${API_URL}/api/admin/team-stats`, {
+    //     method: "POST",
+    //     headers: {
+    //       Authorization: `Bearer ${adminToken}`,
+    //       "Content-Type": "application/json",
+    //     },
+    //     body:
+    //   })
   };
 
   const handleLogout = async () => {
@@ -131,23 +135,38 @@ export default function AdminDashboard() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Welcome, worthy one!</Text>
-      <TextInput
-        placeholder="Event Code"
-        value={eventCode}
-        onChangeText={setEventCode}
-        style={styles.codeInput}
-      />
-      <TouchableOpacity
-        style={styles.powerfulButtons}
-        onPress={handleScheduleUpdate}
-      >
-        <Text style={styles.text}>Update Schedule</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.powerfulButtons}>
-        <Text style={styles.text}>Update Team Status</Text>
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row" }}>
+        <View style={{ width: "50%", gap: 10 }}>
+          <TextInput
+            placeholder="Event Code"
+            value={eventCode}
+            onChangeText={setEventCode}
+            style={styles.codeInput}
+          />
+          <TouchableOpacity
+            style={styles.powerfulButtons}
+            onPress={handleScheduleUpdate}
+          >
+            <Text style={styles.text}>Update Schedule</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ width: "50%", gap: 10 }}>
+          <TextInput
+            placeholder="Team Number"
+            value={teamNumber}
+            onChangeText={setTeamNumber}
+            style={styles.codeInput}
+          />
+          <TouchableOpacity
+            style={styles.powerfulButtons}
+            onPress={handleGetTeamStats}
+          >
+            <Text style={styles.text}>Get Team Stats</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
 
-      <View>
+      <View style={{ padding: 10 }}>
         <TouchableOpacity onPress={handleLogout} style={styles.powerfulButtons}>
           <Text style={styles.text}>Logout</Text>
         </TouchableOpacity>
@@ -187,7 +206,7 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat",
     fontWeight: 400,
     fontSize: 14,
-    width: "40%",
+    width: "70%",
     alignSelf: "center",
   },
 });

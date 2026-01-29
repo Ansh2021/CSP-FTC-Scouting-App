@@ -16,12 +16,12 @@ if (!admin.apps.length) {
 
 export const db = admin.firestore();
 
-db.enablePersistence({
-  synchronizeTabs: true,
-  experimentalForceOwningTab: true,
-})
-  .then(console.log("Persistence enabled!"))
-  .catch((err) => console.error("Failed enabling persistence:", err));
+// db.enablePersistence({
+//   synchronizeTabs: true,
+//   experimentalForceOwningTab: true,
+// })
+//   .then(console.log("Persistence enabled!"))
+//   .catch((err) => console.error("Failed enabling persistence:", err));
 
 class CachedEmitter {
   constructor() {
