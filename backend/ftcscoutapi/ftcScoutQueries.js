@@ -34,5 +34,21 @@ export const GET_TEAM_STATS = gql`
   }
 `;
 
-// export const GET_SCHEDULE = null;
-// export const GET_TEAM_STATS = null;
+export const GET_EVENT_STATS = gql`
+  query getEventStats($eventByCodeSeason2: Int!, $eventByCodeCode2: String!) {
+    eventByCode(season: $eventByCodeSeason2, code: $eventByCodeCode2) {
+      teams {
+        stats {
+          ... on TeamEventStats2025 {
+            opr {
+              autoPoints
+              dcPoints
+              totalPointsNp
+            }
+          }
+        }
+        teamNumber
+      }
+    }
+  }
+`;

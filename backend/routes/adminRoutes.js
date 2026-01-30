@@ -5,6 +5,7 @@ import { requireAdmin } from "../middleware/adminAuthorization.js";
 import {
   getSchedule,
   getTeamStats,
+  getEventStats,
 } from "../ftcscoutapi/ftcscoutcontroller.js";
 
 const router = express.Router();
@@ -79,6 +80,32 @@ router.post("/team-stats", requireAdmin, async (req, res) => {
     });
 
     console.log("Team stats request body:", req.body);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.post("/event-stats", requireAdmin, async (req, res) => {
+  try {
+    const { year, eventCode } = req.body;
+
+    if (!year) {
+      return res.status(400).json("Missing event stats year parameter.");
+    } else if (!eventCode) {
+      return res.status(400).json("Missing event stats event code parameter.");
+    }
+
+    const eventStats = await getEventStats(year, eventCode);
+
+    res.json({
+      message: "Event stats triggered",
+      year,
+      eventCode,
+      eventStats,
+    });
+
+    console.log("Event stats request body:", req.body);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server error" });

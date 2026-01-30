@@ -126,6 +126,40 @@ export default function AdminDashboard() {
     console.log(Object.keys(data));
   };
 
+  const handleGetEventStats = async () => {
+    if (!eventCode) {
+      Alert.alert("Error", "Please enter an event code.");
+      return;
+    }
+
+    console.log("Event stats requested for event code:", eventCode);
+
+    const response = await fetch(`${API_URL}/api/admin/event-stats`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${adminToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        year,
+        eventCode,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      Alert.alert("Error", data.error || "Failed to get event stats.");
+      return;
+    }
+
+    Alert.alert("Success", "Event stats fetched successfully.");
+
+    console.log("Response status", response.status);
+    console.log("Event Stats", data);
+    console.log(Object.keys(data));
+  };
+
   const handleLogout = async () => {
     if (Platform.OS === "web") {
       localStorage.removeItem("adminToken");
@@ -183,7 +217,13 @@ export default function AdminDashboard() {
         </View>
       </View>
 
-      <View style={{ padding: 10 }}>
+      <View style={{ padding: 10, gap: 20 }}>
+        <TouchableOpacity
+          onPress={handleGetEventStats}
+          style={styles.powerfulButtons}
+        >
+          <Text style={styles.text}>Get Event Stats</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={handleLogout} style={styles.powerfulButtons}>
           <Text style={styles.text}>Logout</Text>
         </TouchableOpacity>

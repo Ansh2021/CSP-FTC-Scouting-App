@@ -1,6 +1,10 @@
 import { ftcScoutClient } from "./ftcScoutClient.js";
-import { GET_SCHEDULE, GET_TEAM_STATS } from "./ftcScoutQueries.js";
-import * as db from "../firebase.js";
+import {
+  GET_SCHEDULE,
+  GET_TEAM_STATS,
+  GET_EVENT_STATS,
+} from "./ftcScoutQueries.js";
+import { db } from "../firebase.js";
 
 export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
   // if (!year) {
@@ -18,6 +22,7 @@ export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
   });
 
   const matches = data.eventByCode.matches.map((match) => ({
+    eventCode: eventByCodeCode2,
     match: match.matchNum,
     red: match.teams
       .filter((team) => team.alliance === "Red")
@@ -28,15 +33,13 @@ export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
   }));
 
   console.log(matches);
-  db.addEmitter()
-    .open("schedule")
-    .delete()
-    .commit()
-    .then(() => {
-      matches.forEach((match) =>
-        db.addEmitter().open("schedule").add(match).commit(),
-      );
-    });
+  await db.collection("schedule").doc(eventByCodeCode2).set(
+    {
+      matches,
+      scheduleUpdatedAt: new Date(),
+    },
+    { merge: true },
+  );
   return matches;
   //TODO: add firebase here
 }
@@ -50,7 +53,7 @@ export async function getTeamStats(number, season) {
     },
   });
 
-  return {
+  const teamStats = {
     name: data.teamByNumber.name,
     schoolName: data.teamByNumber.schoolName,
     autoOPR: data.teamByNumber.quickStats.auto.value,
@@ -58,6 +61,57 @@ export async function getTeamStats(number, season) {
     totalOPR: data.teamByNumber.quickStats.tot.value,
   };
 
-  console.log(stats);
-  return stats;
+  await db.collection("teamStats").doc(number).set(
+    {
+      teamStats,
+      scheduleUpdatedAt: new Date(),
+    },
+    { merge: true },
+  );
+
+  console.log(teamStats);
+  return teamStats;
+}
+
+export async function getEventStats(eventByCodeSeason2, eventByCodeCode2) {
+  const { data } = await ftcScoutClient.query({
+    query: GET_EVENT_STATS,
+    variables: {
+      eventByCodeSeason2,
+      eventByCodeCode2,
+    },
+  });
+
+  const eventStats = data.eventByCode.teams.reduce((acc, team) => {
+    const opr = team.stats?.opr;
+
+    if (!opr) {
+      // acc[team.teamNumber] = {
+      //   auto: null,
+      //   dc: null,
+      //   total: null,
+      //   hasStats: false,
+      // };
+      return acc;
+    }
+
+    acc[team.teamNumber] = {
+      auto: opr.autoPoints,
+      dc: opr.dcPoints,
+      total: opr.totalPointsNp,
+    };
+
+    return acc;
+  }, {});
+
+  await db.collection("eventStats").doc(eventByCodeCode2).set(
+    {
+      eventStats,
+      scheduleUpdatedAt: new Date(),
+    },
+    { merge: true },
+  );
+
+  console.log(eventStats);
+  return eventStats;
 }
