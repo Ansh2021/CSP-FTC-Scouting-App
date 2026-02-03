@@ -1,14 +1,28 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, FlatList } from "react-native";
 import { useState, useEffect } from "react";
-import { DataTable } from "react-native-paper";
+// import { DataTable } from "react-native-paper";
 import { colors } from "../themes/colors";
-// import * as db from "../../backend/firebase.js";
+import * as fb from "../firebase.js";
+
+const currentEvent = "USGACOLLT"; //change this for state
 
 export default function ScheduleScreen() {
-  // const [schedule, setSchedule] = useState([]);
-  // useEffect(() => {
+  const [schedule, setSchedule] = useState([]);
 
-  // }, []);
+  //TODO: may need to switch to useFocusEffect to make this update when screen is focused
+  useEffect(() => {
+    async function fetchSchedule() {
+      const scheduleData = await fb
+        .addListener()
+        .open("schedule")
+        .find("eventCode", "==", currentEvent)
+        .return();
+      setSchedule(scheduleData);
+      // console.log("scheduleData:", scheduleData);
+      console.log("schedule state:", schedule);
+    }
+    fetchSchedule();
+  }, []);
 
   return (
     <View style={styles.container}>

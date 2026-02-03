@@ -1,22 +1,45 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useState, NavigationIndependentTree } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { EventEmitter } from "events";
+import * as fb from "../firebase.js";
 import { colors } from "../themes/colors";
 
 const Tab = createMaterialTopTabNavigator();
+const eventEmitter = new EventEmitter();
 
-const SCOUTERNAME = "";
+const currentEvent = "USGACOLLT"; //change this for state
 
-const PATTERN = "";
-const GROUND_INTAKE = false;
+//prematch
+let SCOUTERNAME = "";
+let MATCH_PATTERN = ""; // GPP, PGP, PPG
+let TEAM_NUMBER = "";
+let MATCH_NUMBER = "";
+let STARTING_POSITION = ""; // classifier, wall
+let ALLIANCE = ""; // red/blue
+let ALLIANCE_NUMBER = ""; // blue 1/2, red 1/2
+let PRELOAD = ""; //0-3
+let GROUND_INTAKE = ""; // true/false
 
-const AUTO_ARTIFACTS_MADE = 0;
-const AUTO_ARTIFACTS_MISSED = 0;
-const AUTO_OFF_LINE = false;
-const AUTO_PATTERN_AT_END = false;
+//auto
+let AUTO_ARTIFACTS_MADE = 0;
+let AUTO_ARTIFACTS_MISSED = 0;
+let AUTO_OFF_LINE = false;
+let AUTO_PATTERN_AT_END = 0;
+//just the number of artifacts that fit the pattern
+//GPPPGPPGG for GPP is 4
 
-const TELE_ARTIFACTS_MADE = 0;
-const TELE_ARTIFACTS_MISSED = 0;
+//tele
+let TELE_ARTIFACTS_MADE = 0;
+let TELE_ARTIFACTS_MISSED = 0;
+
+//endgame
+let ENDGAME_PARK = ""; //none (false), partial, full
+let END_MATCH_PATTERN = 0; //just the number of artifacts that fit the pattern
+
+//postmatch
+let DEFENSE_RATING = ""; //didn't attempt or 0-5 rating
+let COMMENTS = "";
 
 export default function ScoutingScreen() {
   return (
@@ -29,16 +52,17 @@ export default function ScoutingScreen() {
 }
 
 const PreMatch = () => {
-  const [pattern, setPattern] = useState("");
   const [scouterName, setScouterName] = useState("");
-  const [matchNumber, setMatchNumber] = useState(0);
+  const [pattern, setPattern] = useState("");
+  const [teamNumber, setTeamNumber] = useState("");
+  const [matchNumber, setMatchNumber] = useState(""); //so it doesn't just default to 0 on the screen?!
   const [alliance, setAlliance] = useState(null);
-  const [allianceNumber, setAllianceNumber] = useState(0);
+  const [allianceNumber, setAllianceNumber] = useState(""); //blue 1/2, red 1/2
   const [preloadNum, setPreloadNum] = useState(0);
-  const [teamNumber, setTeamNumber] = useState(0);
+  const [groundIntake, setGroundIntake] = useState("");
   const SCOUTERS = [
     "Aarav Patel",
-    "Aiden Di Mino",
+    // "Aiden Di Mino",
     "Akhil Atyam",
     "Alankrita Negi",
     "Alex Rodriguez",
@@ -65,8 +89,10 @@ const PreMatch = () => {
     "Taarika Mukhi",
     "Tristan Suryono",
     "Vyom Parikh",
-    "Zaki Harkness",
+    "Zaki Hassan",
   ];
+  const [filteredScouters, setFilteredScouters] = useState(SCOUTERS);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 };
 
 const styles = StyleSheet.create({

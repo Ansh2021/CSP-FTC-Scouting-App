@@ -3,7 +3,7 @@ import {
   GET_SCHEDULE,
   GET_TEAM_STATS,
   GET_EVENT_STATS,
-} from "./ftcScoutQueries.js";
+} from "./ftcscoutqueries.js";
 import { db } from "../firebase.js";
 
 export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
@@ -22,7 +22,6 @@ export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
   });
 
   const matches = data.eventByCode.matches.map((match) => ({
-    eventCode: eventByCodeCode2,
     match: match.matchNum,
     red: match.teams
       .filter((team) => team.alliance === "Red")
@@ -32,14 +31,16 @@ export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
       .map((team) => team.teamNumber),
   }));
 
-  console.log(matches);
   await db.collection("schedule").doc(eventByCodeCode2).set(
     {
+      eventCode: eventByCodeCode2,
       matches,
       scheduleUpdatedAt: new Date(),
     },
     { merge: true },
   );
+
+  console.log(matches);
   return matches;
   //TODO: add firebase here
 }
@@ -106,6 +107,7 @@ export async function getEventStats(eventByCodeSeason2, eventByCodeCode2) {
 
   await db.collection("eventStats").doc(eventByCodeCode2).set(
     {
+      eventCode: eventByCodeCode2,
       eventStats,
       scheduleUpdatedAt: new Date(),
     },
