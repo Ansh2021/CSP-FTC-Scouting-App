@@ -316,6 +316,11 @@ class CachedListener {
     return this.givenID;
   }
 
+  async getByID(docId) {
+    const snap = await db.collection(this.collection).doc(docId).get();
+    return snap.exists ? snap.data() : null;
+  }
+
   /**
    * Returns data from referenced queries, and can be further focused on specific attributes.
    * @param  {string} attributesList
@@ -355,6 +360,13 @@ class CachedListener {
       let docRef = await db.collection(this.collection).doc(doc).get();
       array.push(docRef.data());
     });
+
+    // for (const docId of this.givenID) {
+    //   const docRef = await db.collection(this.collection).doc(docId).get();
+    //   if (docRef.exists) {
+    //     array.push(docRef.data());
+    //   }
+    // }
 
     if (attributesList.length == 0) {
       console.log("working");

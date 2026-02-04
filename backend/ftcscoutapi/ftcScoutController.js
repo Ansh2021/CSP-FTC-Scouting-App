@@ -7,12 +7,6 @@ import {
 import { db } from "../firebase.js";
 
 export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
-  // if (!year) {
-  //   return res.status(400).json({ error: "Missing event year." });
-  // } else if (!eventCode) {
-  //   return res.status(400).json({ error: "Missing event code." });
-  // }
-
   const { data } = await ftcScoutClient.query({
     query: GET_SCHEDULE,
     variables: {
@@ -33,7 +27,6 @@ export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
 
   await db.collection("schedule").doc(eventByCodeCode2).set(
     {
-      eventCode: eventByCodeCode2,
       matches,
       scheduleUpdatedAt: new Date(),
     },
@@ -42,7 +35,6 @@ export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
 
   console.log(matches);
   return matches;
-  //TODO: add firebase here
 }
 
 export async function getTeamStats(number, season) {
@@ -65,7 +57,7 @@ export async function getTeamStats(number, season) {
   await db.collection("teamStats").doc(number).set(
     {
       teamStats,
-      scheduleUpdatedAt: new Date(),
+      teamStatsUpdatedAt: new Date(),
     },
     { merge: true },
   );
@@ -107,9 +99,8 @@ export async function getEventStats(eventByCodeSeason2, eventByCodeCode2) {
 
   await db.collection("eventStats").doc(eventByCodeCode2).set(
     {
-      eventCode: eventByCodeCode2,
       eventStats,
-      scheduleUpdatedAt: new Date(),
+      eventStatsUpdatedAt: new Date(),
     },
     { merge: true },
   );

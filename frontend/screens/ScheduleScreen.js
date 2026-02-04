@@ -15,11 +15,10 @@ export default function ScheduleScreen() {
       const scheduleData = await fb
         .addListener()
         .open("schedule")
-        .find("eventCode", "==", currentEvent)
-        .return();
+        .getByID(currentEvent);
       setSchedule(scheduleData);
-      // console.log("scheduleData:", scheduleData);
-      console.log("schedule state:", schedule);
+      console.log("scheduleData:", scheduleData);
+      // console.log("schedule state:", schedule);
     }
     fetchSchedule();
   }, []);
@@ -27,6 +26,16 @@ export default function ScheduleScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Schedule Screen</Text>
+      {/* <FlatList
+        data={schedule}
+        numColumns={4}
+        keyExtractor={(item) => item.match.toString()}
+        renderItem={({ item }) => (
+          <View>
+            <Text style={styles.text}>Match {item.match}</Text>
+          </View>
+        )}
+      /> */}
     </View>
   );
 }
