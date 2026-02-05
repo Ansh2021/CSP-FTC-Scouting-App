@@ -18,6 +18,16 @@ export default function InfoScreen() {
           may or may not be easter eggs hidden throughout the app. Try finding
           them (or not). {"\n\n"}Have fun! I guess.
         </Text>
+        <Text
+          style={{
+            fontSize: 5,
+            fontFamily: "Montserrat",
+            color: colors.CSPblue,
+          }}
+        >
+          {/* stop cheating to find the easter eggs */}
+          Hi Jack
+        </Text>
       </View>
     </View>
   );

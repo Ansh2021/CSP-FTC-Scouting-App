@@ -62,7 +62,6 @@ const PreMatch = () => {
   const [groundIntake, setGroundIntake] = useState("");
   const SCOUTERS = [
     "Aarav Patel",
-    // "Aiden Di Mino",
     "Akhil Atyam",
     "Alankrita Negi",
     "Alex Rodriguez",

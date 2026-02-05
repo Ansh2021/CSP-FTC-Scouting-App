@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, ScrollView, FlatList } from "react-native";
 import { useState, useEffect } from "react";
-// import { DataTable } from "react-native-paper";
+import { DataTable } from "react-native-paper";
 import { colors } from "../themes/colors";
 import * as fb from "../firebase.js";
 
-const currentEvent = "USGACOLLT"; //change this for state
+const currentEvent = "USGACOLM4"; //change this for state
 
 export default function ScheduleScreen() {
   const [schedule, setSchedule] = useState([]);
@@ -16,8 +16,7 @@ export default function ScheduleScreen() {
         .addListener()
         .open("schedule")
         .getByID(currentEvent);
-      setSchedule(scheduleData);
-      console.log("scheduleData:", scheduleData);
+      setSchedule(scheduleData.matches);
       // console.log("schedule state:", schedule);
     }
     fetchSchedule();
@@ -26,16 +25,52 @@ export default function ScheduleScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Schedule Screen</Text>
-      {/* <FlatList
-        data={schedule}
-        numColumns={4}
-        keyExtractor={(item) => item.match.toString()}
-        renderItem={({ item }) => (
-          <View>
-            <Text style={styles.text}>Match {item.match}</Text>
-          </View>
-        )}
-      /> */}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <DataTable>
+          <DataTable.Header>
+            <DataTable.Title>
+              <Text style={styles.text}>Match</Text>
+            </DataTable.Title>
+            <DataTable.Title>
+              <Text style={styles.text}>Red 1</Text>
+            </DataTable.Title>
+            <DataTable.Title>
+              <Text style={styles.text}>Red 2</Text>
+            </DataTable.Title>
+            <DataTable.Title>
+              <Text style={styles.text}>Blue 1</Text>
+            </DataTable.Title>
+            <DataTable.Title>
+              <Text style={styles.text}>Blue 2</Text>
+            </DataTable.Title>
+          </DataTable.Header>
+          {schedule.map((item) => (
+            <DataTable.Row key={item.match}>
+              <DataTable.Cell>
+                <Text style={styles.text}>{item.match}</Text>
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <Text style={styles.text}>{item.red[0]}</Text>
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <Text style={styles.text}>{item.red[1]}</Text>
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <Text style={styles.text}>{item.blue[0]}</Text>
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <Text style={styles.text}>{item.blue[1]}</Text>
+              </DataTable.Cell>
+            </DataTable.Row>
+          ))}
+
+          <DataTable.Pagination
+            page={0}
+            numberOfPages={1}
+            onPageChange={(page) => {}}
+          />
+        </DataTable>
+      </ScrollView>
     </View>
   );
 }
