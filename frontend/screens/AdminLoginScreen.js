@@ -26,6 +26,11 @@ export default function AdminLoginScreen() {
       return;
     }
 
+    if (password.toLowerCase() === "jack") {
+      Alert.alert("Jack", "Jack");
+      return;
+    }
+
     try {
       setLoading(true);
       const res = await fetch(`${API_URL}/api/admin/login`, {

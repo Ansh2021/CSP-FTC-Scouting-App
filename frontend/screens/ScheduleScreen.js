@@ -4,7 +4,7 @@ import { DataTable } from "react-native-paper";
 import { colors } from "../themes/colors";
 import * as fb from "../firebase.js";
 
-const currentEvent = "USGACOLM4"; //change this for state
+const currentEvent = "USGACOLLT"; //change this for state
 
 export default function ScheduleScreen() {
   const [schedule, setSchedule] = useState([]);
@@ -24,7 +24,7 @@ export default function ScheduleScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Schedule Screen</Text>
+      <Text style={styles.text}>Schedule</Text>
       <ScrollView showsVerticalScrollIndicator={false}>
         <DataTable>
           <DataTable.Header>
