@@ -826,11 +826,15 @@ const Auto = () => {
   }, []);
 
   return (
-    <View style={styles.mainTabView}>
+    <View style={[styles.mainTabView, { justifyContent: "center" }]}>
       <View
         style={[
           styles.container,
-          { flexDirection: "column", justifyContent: "space-evenly" },
+          {
+            flexDirection: "column",
+            justifyContent: "space-evenly",
+            maxHeight: "60%",
+          },
         ]}
       >
         <View
@@ -843,7 +847,11 @@ const Auto = () => {
         >
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
-            onPress={() => setAutoArtifactsMade(autoArtifactsMade + 1)}
+            onPress={() => {
+              setAutoArtifactsMade(autoArtifactsMade + 1);
+              AUTO_ARTIFACTS_MADE++;
+              console.log("Auto made:", AUTO_ARTIFACTS_MADE);
+            }}
           >
             <Text style={styles.text}>+</Text>
           </TouchableOpacity>
@@ -862,7 +870,11 @@ const Auto = () => {
           </View>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
-            onPress={() => setAutoArtifactsMade(autoArtifactsMade - 1)}
+            onPress={() => {
+              setAutoArtifactsMade(autoArtifactsMade - 1);
+              AUTO_ARTIFACTS_MADE--;
+              console.log("Auto made:", AUTO_ARTIFACTS_MADE);
+            }}
           >
             <Text style={styles.text}>-</Text>
           </TouchableOpacity>
@@ -877,7 +889,11 @@ const Auto = () => {
         >
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
-            onPress={() => setAutoArtifactsMissed(autoArtifactsMissed + 1)}
+            onPress={() => {
+              setAutoArtifactsMissed(autoArtifactsMissed + 1);
+              AUTO_ARTIFACTS_MISSED++;
+              console.log("Auto missed:", AUTO_ARTIFACTS_MISSED);
+            }}
           >
             <Text style={styles.text}>+</Text>
           </TouchableOpacity>
@@ -896,7 +912,11 @@ const Auto = () => {
           </View>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
-            onPress={() => setAutoArtifactsMissed(autoArtifactsMissed - 1)}
+            onPress={() => {
+              setAutoArtifactsMissed(autoArtifactsMissed - 1);
+              AUTO_ARTIFACTS_MISSED--;
+              console.log("Auto missed:", AUTO_ARTIFACTS_MISSED);
+            }}
           >
             <Text style={styles.text}>-</Text>
           </TouchableOpacity>
@@ -938,7 +958,7 @@ const Auto = () => {
             onPress={() => {
               setAutoOffLine(true);
               AUTO_OFF_LINE = true;
-              console.log("Selected auto off line:", AUTO_OFF_LINE);
+              console.log("Auto off line:", AUTO_OFF_LINE);
             }}
           >
             <Text style={styles.text}>Yes</Text>
@@ -959,7 +979,7 @@ const Auto = () => {
             onPress={() => {
               setAutoOffLine(false);
               AUTO_OFF_LINE = false;
-              console.log("Selected auto off line:", AUTO_OFF_LINE);
+              console.log("Auto off line:", AUTO_OFF_LINE);
             }}
           >
             <Text style={styles.text}>No</Text>
@@ -975,7 +995,11 @@ const Auto = () => {
         >
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
-            onPress={() => setAutoPatternAtEnd(autoPatternAtEnd + 1)}
+            onPress={() => {
+              setAutoPatternAtEnd(autoPatternAtEnd + 1);
+              AUTO_PATTERN_AT_END++;
+              console.log("Auto pattern", AUTO_PATTERN_AT_END);
+            }}
           >
             <Text style={styles.text}>+</Text>
           </TouchableOpacity>
@@ -994,7 +1018,11 @@ const Auto = () => {
           </View>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
-            onPress={() => setAutoPatternAtEnd(autoPatternAtEnd - 1)}
+            onPress={() => {
+              setAutoPatternAtEnd(autoPatternAtEnd - 1);
+              AUTO_PATTERN_AT_END--;
+              console.log("Auto pattern", AUTO_PATTERN_AT_END);
+            }}
           >
             <Text style={styles.text}>-</Text>
           </TouchableOpacity>
@@ -1005,8 +1033,6 @@ const Auto = () => {
 };
 
 const TeleOp = () => {
-  // let TELE_ARTIFACTS_MADE = 0;
-  // let TELE_ARTIFACTS_MISSED = 0;
   const [teleArtifactsMade, setTeleArtifactsMade] = useState(0);
   const [teleArtifactsMissed, setTeleArtifactsMissed] = useState(0);
 
@@ -1018,6 +1044,340 @@ const TeleOp = () => {
     };
     eventEmitter.on("submit", resetTeleOpData);
   }, []);
+
+  return (
+    <View style={[styles.mainTabView, { justifyContent: "center" }]}>
+      <View
+        style={[
+          styles.container,
+          {
+            flexDirection: "column",
+            justifyContent: "space-evenly",
+            maxHeight: "50%",
+          },
+        ]}
+      >
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            onPress={() => {
+              setTeleArtifactsMade(teleArtifactsMade + 1);
+              TELE_ARTIFACTS_MADE++;
+              console.log("Teleop made:", TELE_ARTIFACTS_MADE);
+            }}
+          >
+            <Text style={styles.text}>+</Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              alignItems: "center",
+              width: "40%",
+              backgroundColor: colors.artifactpurple,
+              padding: 5,
+              borderRadius: 10,
+              borderColor: "black",
+              borderWidth: 2,
+            }}
+          >
+            <Text style={styles.text}>Made: {teleArtifactsMade}</Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            onPress={() => {
+              setTeleArtifactsMade(teleArtifactsMade - 1);
+              TELE_ARTIFACTS_MADE--;
+              console.log("Teleop made:", TELE_ARTIFACTS_MADE);
+            }}
+          >
+            <Text style={styles.text}>-</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            onPress={() => {
+              setTeleArtifactsMissed(teleArtifactsMissed + 1);
+              TELE_ARTIFACTS_MISSED++;
+              console.log("Teleop missed:", TELE_ARTIFACTS_MISSED);
+            }}
+          >
+            <Text style={styles.text}>+</Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              alignItems: "center",
+              width: "40%",
+              backgroundColor: colors.artifactpurple,
+              padding: 5,
+              borderRadius: 10,
+              borderColor: "black",
+              borderWidth: 2,
+            }}
+          >
+            <Text style={styles.text}>Missed: {teleArtifactsMissed}</Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            onPress={() => {
+              setTeleArtifactsMissed(teleArtifactsMissed - 1);
+              TELE_ARTIFACTS_MISSED--;
+              console.log("Teleop missed:", TELE_ARTIFACTS_MISSED);
+            }}
+          >
+            <Text style={styles.text}>-</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const Endgame = () => {
+  // let ENDGAME_PARK = ""; none (false), partial, full
+  // let END_MATCH_PATTERN = 0;
+  const [endgamePark, setEndgamePark] = useState("");
+  const [endMatchPattern, setEndMatchPattern] = useState(0);
+
+  useEffect(() => {
+    const resetEndgameData = () => {
+      console.log("Resetting endgame data");
+      setEndgamePark("");
+      setEndMatchPattern(0);
+    };
+    eventEmitter.on("submit", resetEndgameData);
+  }, []);
+
+  return (
+    <View style={[styles.mainTabView, { justifyContent: "center" }]}>
+      <View
+        style={[
+          styles.container,
+          {
+            flexDirection: "column",
+            justifyContent: "space-evenly",
+            maxHeight: "50%",
+          },
+        ]}
+      >
+        <View>
+          <Text style={styles.text}>Park</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const Comments = () => {
+  const [comments, setComments] = useState("");
+  const [defenseRating, setDefenseRating] = useState("");
+
+  useEffect(() => {
+    const resetCommentData = () => {
+      console.log("Resetting endgame data");
+      setComments("");
+      setDefenseRating("");
+    };
+    eventEmitter.on("submit", resetCommentData);
+  }, []);
+
+  return (
+    <View style={[styles.mainTabView, { justifyContent: "center" }]}>
+      <View
+        style={[
+          styles.container,
+          {
+            flexDirection: "column",
+            justifyContent: "space-evenly",
+            maxHeight: "80%",
+          },
+        ]}
+      >
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: colors.CSPgreen,
+              padding: 5,
+              borderRadius: 10,
+              borderColor: colors.darkCSPgreen,
+              borderWidth: 2,
+              width: "30%",
+            }}
+          >
+            <Text style={styles.text}>Defense</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              width: "50%",
+              gap: 5,
+              padding: 5,
+            }}
+          >
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { backgroundColor: colors.CSPgreen, padding: 0, width: "20%" },
+                defenseRating === "1" ||
+                defenseRating === "2" ||
+                defenseRating === "3" ||
+                defenseRating === "4" ||
+                defenseRating === "5"
+                  ? {
+                      borderColor: "black",
+                      backgroundColor: colors.artifactpurple,
+                    }
+                  : {
+                      borderColor: colors.darkCSPgreen,
+                      backgroundColor: colors.CSPgreen,
+                    },
+              ]}
+              onPress={() => {
+                setDefenseRating("1");
+                DEFENSE_RATING = "1";
+                console.log("Defense rating:", DEFENSE_RATING);
+              }}
+            >
+              <Text style={styles.text}>★</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { backgroundColor: colors.CSPgreen, padding: 0, width: "20%" },
+                defenseRating === "2" ||
+                defenseRating === "3" ||
+                defenseRating === "4" ||
+                defenseRating === "5"
+                  ? {
+                      borderColor: "black",
+                      backgroundColor: colors.artifactpurple,
+                    }
+                  : {
+                      borderColor: colors.darkCSPgreen,
+                      backgroundColor: colors.CSPgreen,
+                    },
+              ]}
+              onPress={() => {
+                setDefenseRating("2");
+                DEFENSE_RATING = "2";
+                console.log("Defense rating:", DEFENSE_RATING);
+              }}
+            >
+              <Text style={styles.text}>★</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { backgroundColor: colors.CSPgreen, padding: 0, width: "20%" },
+                defenseRating === "3" ||
+                defenseRating === "4" ||
+                defenseRating === "5"
+                  ? {
+                      borderColor: "black",
+                      backgroundColor: colors.artifactpurple,
+                    }
+                  : {
+                      borderColor: colors.darkCSPgreen,
+                      backgroundColor: colors.CSPgreen,
+                    },
+              ]}
+              onPress={() => {
+                setDefenseRating("3");
+                DEFENSE_RATING = "3";
+                console.log("Defense rating:", DEFENSE_RATING);
+              }}
+            >
+              <Text style={styles.text}>★</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { backgroundColor: colors.CSPgreen, padding: 0, width: "20%" },
+                defenseRating === "4" || defenseRating === "5"
+                  ? {
+                      borderColor: "black",
+                      backgroundColor: colors.artifactpurple,
+                    }
+                  : {
+                      borderColor: colors.darkCSPgreen,
+                      backgroundColor: colors.CSPgreen,
+                    },
+              ]}
+              onPress={() => {
+                setDefenseRating("4");
+                DEFENSE_RATING = "4";
+                console.log("Defense rating:", DEFENSE_RATING);
+              }}
+            >
+              <Text style={styles.text}>★</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { backgroundColor: colors.CSPgreen, padding: 0, width: "20%" },
+                defenseRating === "5"
+                  ? {
+                      borderColor: "black",
+                      backgroundColor: colors.artifactpurple,
+                    }
+                  : {
+                      borderColor: colors.darkCSPgreen,
+                      backgroundColor: colors.CSPgreen,
+                    },
+              ]}
+              onPress={() => {
+                setDefenseRating("5");
+                DEFENSE_RATING = "5";
+                console.log("Defense rating:", DEFENSE_RATING);
+              }}
+            >
+              <Text style={styles.text}>★</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            height: "90%",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <TextInput
+            style={[styles.textInput, { height: "80%" }]}
+            placeholder="Comments"
+            value={comments}
+            onChangeText={(text) => {
+              setComments(text);
+              COMMENTS = text;
+            }}
+          />
+        </View>
+      </View>
+    </View>
+  );
 };
 
 const ScoutingScreen = () => {
@@ -1049,6 +1409,21 @@ const ScoutingScreen = () => {
           <Tab.Screen
             name="Auto"
             component={Auto}
+            options={{ gestureEnabled: true }}
+          />
+          <Tab.Screen
+            name="TeleOp"
+            component={TeleOp}
+            options={{ gestureEnabled: true }}
+          />
+          <Tab.Screen
+            name="Endgame"
+            component={Endgame}
+            options={{ gestureEnabled: true }}
+          />
+          <Tab.Screen
+            name="Comments"
+            component={Comments}
             options={{ gestureEnabled: true }}
           />
         </Tab.Navigator>
