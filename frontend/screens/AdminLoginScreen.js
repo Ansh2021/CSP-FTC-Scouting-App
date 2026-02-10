@@ -27,7 +27,7 @@ export default function AdminLoginScreen() {
     }
 
     if (password.toLowerCase() === "jack") {
-      Alert.alert("Jack", "Jack");
+      Alert.alert("Hi Boss");
       return;
     }
 

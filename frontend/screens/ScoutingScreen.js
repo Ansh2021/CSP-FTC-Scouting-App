@@ -113,14 +113,69 @@ const theSubmit = (submitted) => {
     });
 };
 
+//MAKE SURE TO FIND OUT IF I REALLY NEED THIS RECURSIVE PARAMETER
+const autoUpdateTeamNumber = (
+  alliance,
+  allianceNumber,
+  matchNumber,
+  setTeamNumber,
+  recursive = false,
+) => {
+  if (!alliance || !allianceNumber || !matchNumber) {
+    console.log("Not enough info to update team number");
+    return;
+  }
+  fb.addListener()
+    .open("schedule")
+    .getByID(currentEvent)
+    .then((items) => {
+      const match = items.matches.find((m) => m.match === Number(matchNumber));
+      if (alliance === "Red") {
+        const alliance_ = match.red;
+        const teamNum = alliance_[allianceNumber - 1] ?? null;
+        setTeamNumber(teamNum);
+        TEAM_NUMBER = "" + teamNum;
+        console.log("Auto-updated team number:", TEAM_NUMBER);
+      } else if (alliance === "Blue") {
+        const alliance_ = match.blue;
+        const teamNum = alliance_[allianceNumber - 1] ?? null;
+        setTeamNumber(teamNum);
+        TEAM_NUMBER = "" + teamNum;
+        console.log("Auto-updated team number:", TEAM_NUMBER);
+      }
+    });
+
+  // if (!recursive) {
+  //   autoUpdateTeamNumber(
+  //     alliance,
+  //     allianceNumber,
+  //     matchNumber,
+  //     setTeamNumber,
+  //     true,
+  //   );
+  // }
+};
 //gimme the team number
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: "100%",
+    width: "80%",
+    backgroundColor: colors.decodeblue,
+    padding: 20,
+    alignItems: "center",
+    borderRadius: 10,
+    borderColor: colors.CSPgreen,
+    borderWidth: 2,
+    gap: 15,
+  },
   prematchView: {
     flex: 1,
     backgroundImage: `linear-gradient(to bottom, ${colors.CSPblue} 5%, ${colors.CSPgreen} 90%)`,
     padding: 20,
     gap: 10,
+    alignItems: "center",
   },
 });
 
@@ -133,6 +188,7 @@ const PreMatch = () => {
   const [allianceNumber, setAllianceNumber] = useState(""); //blue 1/2, red 1/2
   const [preloadNum, setPreloadNum] = useState(0);
   const [groundIntake, setGroundIntake] = useState("");
+  const [startingPosition, setStartingPosition] = useState("");
   const SCOUTERS = [
     "Aarav Patel",
     "Akhil Atyam",
@@ -215,6 +271,7 @@ const PreMatch = () => {
       setAllianceNumber("");
       setPreloadNum(0);
       setGroundIntake("");
+      setStartingPosition("");
     };
 
     eventEmitter.on("submit", resetPrematchData);
@@ -250,6 +307,7 @@ const PreMatch = () => {
           }}
           data={filteredScouters}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -273,60 +331,755 @@ const PreMatch = () => {
           )}
         />
       )}
-      <View>
+      <View style={styles.container}>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TextInput
+            placeholder="Match Number"
+            value={matchNumber}
+            onChangeText={(text) => {
+              setMatchNumber(text);
+              MATCH_NUMBER = "" + text;
+              autoUpdateTeamNumber(
+                alliance,
+                allianceNumber,
+                matchNumber,
+                setTeamNumber,
+              );
+            }}
+            inputType="numeric"
+            keyboardType="numeric"
+            style={{
+              backgroundColor: "#fff",
+              padding: 10,
+              borderRadius: 5,
+              width: "90%",
+              textAlign: "center",
+              fontFamily: "Montserrat",
+              fontWeight: 400,
+              fontSize: 16,
+            }}
+          />
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TouchableOpacity
+            style={[
+              {
+                backgroundColor: colors.redalliance,
+                padding: 5,
+                borderWidth: 2,
+                width: "25%",
+                height: "2em",
+                borderRadius: "2.25em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              alliance === "Red"
+                ? { borderColor: "black" }
+                : { borderColor: colors.darkredalliance },
+            ]}
+            onPress={() => {
+              setAlliance("Red");
+              ALLIANCE = "Red";
+              console.log("Selected alliance:", ALLIANCE);
+              autoUpdateTeamNumber(
+                alliance,
+                allianceNumber,
+                matchNumber,
+                setTeamNumber,
+              );
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 12,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                fontSize: 16,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              Red
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              {
+                backgroundColor: colors.bluealliance,
+                padding: 5,
+                borderWidth: 2,
+                borderRadius: "2.25em",
+                width: "25%",
+                height: "2em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              alliance === "Blue"
+                ? { borderColor: "black" }
+                : { borderColor: colors.darkbluealliance },
+            ]}
+            onPress={() => {
+              setAlliance("Blue");
+              ALLIANCE = "Blue";
+              console.log("Selected alliance:", ALLIANCE);
+              autoUpdateTeamNumber(
+                alliance,
+                allianceNumber,
+                matchNumber,
+                setTeamNumber,
+              );
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              Blue
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TouchableOpacity
+            style={[
+              {
+                padding: 5,
+                borderRadius: "2.25em",
+                borderWidth: 2,
+                width: "25%",
+                height: "2em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              allianceNumber === "1"
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setAllianceNumber("1");
+              ALLIANCE_NUMBER = "1";
+              console.log("Selected alliance number:", ALLIANCE_NUMBER);
+              autoUpdateTeamNumber(
+                alliance,
+                allianceNumber,
+                matchNumber,
+                setTeamNumber,
+              );
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              1
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              {
+                padding: 5,
+                borderRadius: "2.25em",
+                borderWidth: 2,
+                width: "25%",
+                height: "2em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              allianceNumber === "2"
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setAllianceNumber("2");
+              ALLIANCE_NUMBER = "2";
+              console.log("Selected alliance number:", ALLIANCE_NUMBER);
+              autoUpdateTeamNumber(
+                alliance,
+                allianceNumber,
+                matchNumber,
+                setTeamNumber,
+              );
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              2
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         <TextInput
           style={{
             backgroundColor: "#fff",
             padding: 10,
             borderRadius: 5,
-            width: "100%",
+            width: "90%",
             textAlign: "center",
             fontFamily: "Montserrat",
             fontWeight: 400,
             fontSize: 16,
           }}
           placeholder="Team Number"
-          value={matchNumber}
+          value={teamNumber}
           onChangeText={(text) => {
-            setMatchNumber(text);
-            MATCH_NUMBER = text + "";
-            //TODO: PUT UPDATE TEAM NUMBER THING HERE JS TO MAKE LIFE EASIER FOR SCOUTERS
+            setTeamNumber(text);
+            TEAM_NUMBER = "" + text;
           }}
           inputType="numeric"
           keyboardType="numeric"
         />
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TouchableOpacity
+            style={[
+              {
+                padding: 5,
+                borderRadius: "2.25em",
+                borderWidth: 2,
+                width: "25%",
+                height: "2em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              startingPosition === "Classifier"
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setStartingPosition("Classifier");
+              STARTING_POSITION = "Classifier";
+              console.log("Selected starting position:", STARTING_POSITION);
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              Classifier
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              {
+                padding: 5,
+                borderRadius: "2.25em",
+                borderWidth: 2,
+                width: "25%",
+                height: "2em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              startingPosition === "Wall"
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setStartingPosition("Wall");
+              STARTING_POSITION = "Wall";
+              console.log("Selected starting position:", STARTING_POSITION);
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              Wall
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              {
+                padding: 5,
+                borderRadius: "2.25em",
+                borderWidth: 2,
+                width: "25%",
+                height: "2em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              startingPosition === "No Show"
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setStartingPosition("No Show");
+              STARTING_POSITION = "No Show";
+              console.log("Selected starting position:", STARTING_POSITION);
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              No Show
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TextInput
+            style={{
+              backgroundColor: "#fff",
+              padding: 10,
+              borderRadius: 5,
+              width: "90%",
+              textAlign: "center",
+              fontFamily: "Montserrat",
+              fontWeight: 400,
+              fontSize: 16,
+            }}
+            placeholder="Preload Number"
+            inputType="numeric"
+            keyboardType="numeric"
+            value={preloadNum}
+            onChangeText={(text) => {
+              if (Number(text) < 0 || Number(text) > 3) return;
+              setPreloadNum(text);
+              PRELOAD = "" + text;
+            }}
+          />
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: colors.CSPgreen,
+              padding: 5,
+              borderRadius: 10,
+              borderColor: colors.darkCSPgreen,
+              borderWidth: 2,
+              width: "40%",
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              Ground Intake
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={[
+              {
+                padding: 5,
+                borderRadius: "2.25em",
+                borderWidth: 2,
+                width: "25%",
+                height: "2em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              groundIntake === true
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setGroundIntake(true);
+              GROUND_INTAKE = true;
+              console.log("Selected ground intake:", GROUND_INTAKE);
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              Yes
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              {
+                padding: 5,
+                borderRadius: "2.25em",
+                borderWidth: 2,
+                width: "25%",
+                height: "2em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              groundIntake === false
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setGroundIntake(false);
+              GROUND_INTAKE = false;
+              console.log("Selected ground intake:", GROUND_INTAKE);
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              No
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: colors.CSPgreen,
+              padding: 5,
+              borderRadius: 10,
+              borderColor: colors.darkCSPgreen,
+              borderWidth: 2,
+              width: "40%",
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              Match Pattern
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={[
+              {
+                padding: 5,
+                borderRadius: "2.25em",
+                borderWidth: 2,
+                width: "15%",
+                height: "2em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              pattern === "PPG"
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setPattern("PPG");
+              MATCH_PATTERN = "PPG";
+              console.log("Selected pattern:", MATCH_PATTERN);
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              PPG
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              {
+                padding: 5,
+                borderRadius: "2.25em",
+                borderWidth: 2,
+                width: "15%",
+                height: "2em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              pattern === "PGP"
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setPattern("PGP");
+              MATCH_PATTERN = "PGP";
+              console.log("Selected pattern:", MATCH_PATTERN);
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              PGP
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              {
+                padding: 5,
+                borderRadius: "2.25em",
+                borderWidth: 2,
+                width: "15%",
+                height: "2em",
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+              pattern === "GPP"
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setPattern("GPP");
+              MATCH_PATTERN = "GPP";
+              console.log("Selected pattern:", MATCH_PATTERN);
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                height: "100%",
+                fontFamily: "Montserrat",
+                fontWeight: 400,
+                textAlign: "center",
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              GPP
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 };
 
-// const stuf = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     height: "100%",
-//     width: "100%",
-//     backgroundImage: `linear-gradient(to bottom, ${colors.CSPblue} 5%, ${colors.CSPgreen} 90%)`,
-//   },
-//   textContainer: {
-//     margin: 30,
-//   },
-//   text: {
-//     color: "#fff",
-//     fontSize: 18,
-//     fontFamily: "Montserrat",
-//     fontWeight: 400,
-//   },
-// });
+const Auto = () => {};
 
 const ScoutingScreen = () => {
-  // return (
-  //   <View style={stuf.container}>
-  //     <View style={stuf.textContainer}>
-  //       <Text style={stuf.text}>get good</Text>
-  //     </View>
-  //   </View>
-  // );
-
   return (
     <NavigationIndependentTree>
       <View style={{ flex: 1, height: "100%", width: "100%" }}>
