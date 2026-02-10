@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import {
   View,
   Text,
@@ -170,12 +170,68 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     gap: 15,
   },
-  prematchView: {
+  mainTabView: {
     flex: 1,
     backgroundImage: `linear-gradient(to bottom, ${colors.CSPblue} 5%, ${colors.CSPgreen} 90%)`,
     padding: 20,
     gap: 10,
     alignItems: "center",
+  },
+  button: {
+    padding: 5,
+    borderRadius: "2.25em",
+    borderWidth: 2,
+    width: "25%",
+    height: "2em",
+    textAlign: "center",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  redAllianceButton: {
+    backgroundColor: colors.redalliance,
+    padding: 5,
+    borderWidth: 2,
+    width: "25%",
+    height: "2em",
+    borderRadius: "2.25em",
+    textAlign: "center",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  blueAllianceButton: {
+    backgroundColor: colors.bluealliance,
+    padding: 5,
+    borderWidth: 2,
+    width: "25%",
+    height: "2em",
+    borderRadius: "2.25em",
+    textAlign: "center",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    color: "#fff",
+    fontSize: 16,
+    height: "100%",
+    fontFamily: "Montserrat",
+    fontWeight: 400,
+    textAlign: "center",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textInput: {
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 5,
+    width: "90%",
+    textAlign: "center",
+    fontFamily: "Montserrat",
+    fontWeight: 400,
+    fontSize: 16,
   },
 });
 
@@ -278,18 +334,9 @@ const PreMatch = () => {
   }, []);
 
   return (
-    <View style={styles.prematchView}>
+    <View style={styles.mainTabView}>
       <TextInput
-        style={{
-          backgroundColor: "#fff",
-          padding: 10,
-          borderRadius: 5,
-          width: "100%",
-          textAlign: "center",
-          fontFamily: "Montserrat",
-          fontWeight: 400,
-          fontSize: 16,
-        }}
+        style={styles.textInput}
         placeholder="Scouter Name"
         value={scouterName}
         onChangeText={handleScouterNameChange}
@@ -355,16 +402,7 @@ const PreMatch = () => {
             }}
             inputType="numeric"
             keyboardType="numeric"
-            style={{
-              backgroundColor: "#fff",
-              padding: 10,
-              borderRadius: 5,
-              width: "90%",
-              textAlign: "center",
-              fontFamily: "Montserrat",
-              fontWeight: 400,
-              fontSize: 16,
-            }}
+            style={styles.textInput}
           />
         </View>
         <View
@@ -377,18 +415,7 @@ const PreMatch = () => {
         >
           <TouchableOpacity
             style={[
-              {
-                backgroundColor: colors.redalliance,
-                padding: 5,
-                borderWidth: 2,
-                width: "25%",
-                height: "2em",
-                borderRadius: "2.25em",
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              },
+              styles.redAllianceButton,
               alliance === "Red"
                 ? { borderColor: "black" }
                 : { borderColor: colors.darkredalliance },
@@ -405,37 +432,11 @@ const PreMatch = () => {
               );
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 12,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                fontSize: 16,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              Red
-            </Text>
+            <Text style={styles.text}>Red</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
-              {
-                backgroundColor: colors.bluealliance,
-                padding: 5,
-                borderWidth: 2,
-                borderRadius: "2.25em",
-                width: "25%",
-                height: "2em",
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              },
+              styles.blueAllianceButton,
               alliance === "Blue"
                 ? { borderColor: "black" }
                 : { borderColor: colors.darkbluealliance },
@@ -452,21 +453,7 @@ const PreMatch = () => {
               );
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              Blue
-            </Text>
+            <Text style={styles.text}>Blue</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -479,17 +466,7 @@ const PreMatch = () => {
         >
           <TouchableOpacity
             style={[
-              {
-                padding: 5,
-                borderRadius: "2.25em",
-                borderWidth: 2,
-                width: "25%",
-                height: "2em",
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              },
+              styles.button,
               allianceNumber === "1"
                 ? {
                     borderColor: "black",
@@ -512,35 +489,11 @@ const PreMatch = () => {
               );
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              1
-            </Text>
+            <Text style={styles.text}>1</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
-              {
-                padding: 5,
-                borderRadius: "2.25em",
-                borderWidth: 2,
-                width: "25%",
-                height: "2em",
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              },
+              styles.button,
               allianceNumber === "2"
                 ? {
                     borderColor: "black",
@@ -563,35 +516,12 @@ const PreMatch = () => {
               );
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              2
-            </Text>
+            <Text style={styles.text}>2</Text>
           </TouchableOpacity>
         </View>
 
         <TextInput
-          style={{
-            backgroundColor: "#fff",
-            padding: 10,
-            borderRadius: 5,
-            width: "90%",
-            textAlign: "center",
-            fontFamily: "Montserrat",
-            fontWeight: 400,
-            fontSize: 16,
-          }}
+          style={styles.textInput}
           placeholder="Team Number"
           value={teamNumber}
           onChangeText={(text) => {
@@ -611,17 +541,7 @@ const PreMatch = () => {
         >
           <TouchableOpacity
             style={[
-              {
-                padding: 5,
-                borderRadius: "2.25em",
-                borderWidth: 2,
-                width: "25%",
-                height: "2em",
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              },
+              styles.button,
               startingPosition === "Classifier"
                 ? {
                     borderColor: "black",
@@ -638,35 +558,11 @@ const PreMatch = () => {
               console.log("Selected starting position:", STARTING_POSITION);
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              Classifier
-            </Text>
+            <Text style={styles.text}>Classifier</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
-              {
-                padding: 5,
-                borderRadius: "2.25em",
-                borderWidth: 2,
-                width: "25%",
-                height: "2em",
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              },
+              styles.button,
               startingPosition === "Wall"
                 ? {
                     borderColor: "black",
@@ -683,35 +579,11 @@ const PreMatch = () => {
               console.log("Selected starting position:", STARTING_POSITION);
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              Wall
-            </Text>
+            <Text style={styles.text}>Wall</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
-              {
-                padding: 5,
-                borderRadius: "2.25em",
-                borderWidth: 2,
-                width: "25%",
-                height: "2em",
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              },
+              styles.button,
               startingPosition === "No Show"
                 ? {
                     borderColor: "black",
@@ -728,21 +600,7 @@ const PreMatch = () => {
               console.log("Selected starting position:", STARTING_POSITION);
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              No Show
-            </Text>
+            <Text style={styles.text}>No Show</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -754,16 +612,7 @@ const PreMatch = () => {
           }}
         >
           <TextInput
-            style={{
-              backgroundColor: "#fff",
-              padding: 10,
-              borderRadius: 5,
-              width: "90%",
-              textAlign: "center",
-              fontFamily: "Montserrat",
-              fontWeight: 400,
-              fontSize: 16,
-            }}
+            style={styles.textInput}
             placeholder="Preload Number"
             inputType="numeric"
             keyboardType="numeric"
@@ -794,35 +643,11 @@ const PreMatch = () => {
               width: "40%",
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              Ground Intake
-            </Text>
+            <Text style={styles.text}>Ground Intake</Text>
           </View>
           <TouchableOpacity
             style={[
-              {
-                padding: 5,
-                borderRadius: "2.25em",
-                borderWidth: 2,
-                width: "25%",
-                height: "2em",
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              },
+              styles.button,
               groundIntake === true
                 ? {
                     borderColor: "black",
@@ -839,35 +664,11 @@ const PreMatch = () => {
               console.log("Selected ground intake:", GROUND_INTAKE);
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              Yes
-            </Text>
+            <Text style={styles.text}>Yes</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
-              {
-                padding: 5,
-                borderRadius: "2.25em",
-                borderWidth: 2,
-                width: "25%",
-                height: "2em",
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              },
+              styles.button,
               groundIntake === false
                 ? {
                     borderColor: "black",
@@ -884,21 +685,7 @@ const PreMatch = () => {
               console.log("Selected ground intake:", GROUND_INTAKE);
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              No
-            </Text>
+            <Text style={styles.text}>No</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -920,21 +707,7 @@ const PreMatch = () => {
               width: "40%",
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              Match Pattern
-            </Text>
+            <Text style={styles.text}>Match Pattern</Text>
           </View>
           <TouchableOpacity
             style={[
@@ -965,21 +738,7 @@ const PreMatch = () => {
               console.log("Selected pattern:", MATCH_PATTERN);
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              PPG
-            </Text>
+            <Text style={styles.text}>PPG</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -1010,21 +769,7 @@ const PreMatch = () => {
               console.log("Selected pattern:", MATCH_PATTERN);
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              PGP
-            </Text>
+            <Text style={styles.text}>PGP</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -1055,21 +800,7 @@ const PreMatch = () => {
               console.log("Selected pattern:", MATCH_PATTERN);
             }}
           >
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: 16,
-                height: "100%",
-                fontFamily: "Montserrat",
-                fontWeight: 400,
-                textAlign: "center",
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              GPP
-            </Text>
+            <Text style={styles.text}>GPP</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -1077,7 +808,217 @@ const PreMatch = () => {
   );
 };
 
-const Auto = () => {};
+const Auto = () => {
+  const [autoArtifactsMade, setAutoArtifactsMade] = useState(0);
+  const [autoArtifactsMissed, setAutoArtifactsMissed] = useState(0);
+  const [autoOffLine, setAutoOffLine] = useState("");
+  const [autoPatternAtEnd, setAutoPatternAtEnd] = useState(0);
+
+  useEffect(() => {
+    const resetAutoData = () => {
+      console.log("Resetting auto data");
+      setAutoArtifactsMade(0);
+      setAutoArtifactsMissed(0);
+      setAutoOffLine("");
+      setAutoPatternAtEnd(0);
+    };
+    eventEmitter.on("submit", resetAutoData);
+  }, []);
+
+  return (
+    <View style={styles.mainTabView}>
+      <View
+        style={[
+          styles.container,
+          { flexDirection: "column", justifyContent: "space-evenly" },
+        ]}
+      >
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            onPress={() => setAutoArtifactsMade(autoArtifactsMade + 1)}
+          >
+            <Text style={styles.text}>+</Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              alignItems: "center",
+              width: "40%",
+              backgroundColor: colors.artifactpurple,
+              padding: 5,
+              borderRadius: 10,
+              borderColor: "black",
+              borderWidth: 2,
+            }}
+          >
+            <Text style={styles.text}>Made: {autoArtifactsMade}</Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            onPress={() => setAutoArtifactsMade(autoArtifactsMade - 1)}
+          >
+            <Text style={styles.text}>-</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            onPress={() => setAutoArtifactsMissed(autoArtifactsMissed + 1)}
+          >
+            <Text style={styles.text}>+</Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              alignItems: "center",
+              width: "40%",
+              backgroundColor: colors.artifactpurple,
+              padding: 5,
+              borderRadius: 10,
+              borderColor: "black",
+              borderWidth: 2,
+            }}
+          >
+            <Text style={styles.text}>Missed: {autoArtifactsMissed}</Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            onPress={() => setAutoArtifactsMissed(autoArtifactsMissed - 1)}
+          >
+            <Text style={styles.text}>-</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: colors.CSPgreen,
+              padding: 5,
+              borderRadius: 10,
+              borderColor: colors.darkCSPgreen,
+              borderWidth: 2,
+              width: "40%",
+            }}
+          >
+            <Text style={styles.text}>Auto Off Line</Text>
+          </View>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              autoOffLine === true
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setAutoOffLine(true);
+              AUTO_OFF_LINE = true;
+              console.log("Selected auto off line:", AUTO_OFF_LINE);
+            }}
+          >
+            <Text style={styles.text}>Yes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              autoOffLine === false
+                ? {
+                    borderColor: "black",
+                    backgroundColor: colors.artifactpurple,
+                  }
+                : {
+                    borderColor: colors.darkCSPgreen,
+                    backgroundColor: colors.CSPgreen,
+                  },
+            ]}
+            onPress={() => {
+              setAutoOffLine(false);
+              AUTO_OFF_LINE = false;
+              console.log("Selected auto off line:", AUTO_OFF_LINE);
+            }}
+          >
+            <Text style={styles.text}>No</Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            onPress={() => setAutoPatternAtEnd(autoPatternAtEnd + 1)}
+          >
+            <Text style={styles.text}>+</Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              alignItems: "center",
+              width: "40%",
+              backgroundColor: colors.artifactpurple,
+              padding: 5,
+              borderRadius: 10,
+              borderColor: "black",
+              borderWidth: 2,
+            }}
+          >
+            <Text style={styles.text}>Pattern: {autoPatternAtEnd}</Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            onPress={() => setAutoPatternAtEnd(autoPatternAtEnd - 1)}
+          >
+            <Text style={styles.text}>-</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const TeleOp = () => {
+  // let TELE_ARTIFACTS_MADE = 0;
+  // let TELE_ARTIFACTS_MISSED = 0;
+  const [teleArtifactsMade, setTeleArtifactsMade] = useState(0);
+  const [teleArtifactsMissed, setTeleArtifactsMissed] = useState(0);
+
+  useEffect(() => {
+    const resetTeleOpData = () => {
+      console.log("Resetting teleop data");
+      setTeleArtifactsMade(0);
+      setTeleArtifactsMissed(0);
+    };
+    eventEmitter.on("submit", resetTeleOpData);
+  }, []);
+};
 
 const ScoutingScreen = () => {
   return (
@@ -1103,6 +1044,11 @@ const ScoutingScreen = () => {
           <Tab.Screen
             name="Pre-Match"
             component={PreMatch}
+            options={{ gestureEnabled: true }}
+          />
+          <Tab.Screen
+            name="Auto"
+            component={Auto}
             options={{ gestureEnabled: true }}
           />
         </Tab.Navigator>
