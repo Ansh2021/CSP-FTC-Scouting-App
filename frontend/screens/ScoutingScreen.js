@@ -10,8 +10,10 @@ import {
 import { NavigationIndependentTree } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { EventEmitter } from "events";
-import { Alert } from "@blazejkustra/react-native-alert";
+import Alert from "@blazejkustra/react-native-alert";
 import * as fb from "../firebase.js";
+import { db } from "../firebase.js";
+import { doc, setDoc } from "firebase/firestore";
 import { colors } from "../themes/colors";
 
 //me when i copy and paste code
@@ -19,16 +21,19 @@ const Tab = createMaterialTopTabNavigator();
 const eventEmitter = new EventEmitter();
 
 const currentEvent = "USGACOLLT"; //change this for state
+const team = 19917; //plecholder
+const matchNUMBER = 1;
 
 //prematch
 let SCOUTER_NAME = "";
+let SCOUTER_TEAM = "";
 let MATCH_PATTERN = ""; // GPP, PGP, PPG
 let TEAM_NUMBER = "";
 let MATCH_NUMBER = "";
 let STARTING_POSITION = ""; // classifier, wall
 let ALLIANCE = ""; // red/blue
 let ALLIANCE_NUMBER = ""; // blue 1/2, red 1/2
-let PRELOAD = 0; //0-3
+let PRELOAD = ""; //0-3
 let GROUND_INTAKE = ""; // true/false
 
 //auto
@@ -51,7 +56,7 @@ let END_MATCH_PATTERN = 0; //just the number of artifacts that fit the pattern
 let DEFENSE_RATING = ""; //didn't attempt or 0-5 rating
 let COMMENTS = "";
 
-const theSubmit = (submitted) => {
+const theSubmit = async (submitted) => {
   if (submitted) return;
   if (SCOUTER_NAME == "") {
     Alert.alert("Error", "Please enter your name.");
@@ -61,6 +66,7 @@ const theSubmit = (submitted) => {
   //might need an abs value here to make sure things don't break
   let theData = {
     scouterName: SCOUTER_NAME,
+    scouterTeam: SCOUTER_TEAM,
     pattern: MATCH_PATTERN,
     teamNumber: TEAM_NUMBER,
     matchNumber: MATCH_NUMBER,
@@ -80,37 +86,69 @@ const theSubmit = (submitted) => {
     defenseRating: DEFENSE_RATING,
     comments: COMMENTS,
   };
+  const docID = `${MATCH_NUMBER}_${TEAM_NUMBER}_${SCOUTER_TEAM}`;
   console.log(theData);
-  fb.addEmitter()
-    .open("scouting")
-    .add(theData)
-    .commit()
-    .then(() => {
-      Alert.alert("Success!", "Data submitted successfully.");
-      {
-        SCOUTER_NAME = "";
-        MATCH_PATTERN = "";
-        TEAM_NUMBER = "";
-        MATCH_NUMBER = "";
-        STARTING_POSITION = "";
-        ALLIANCE = "";
-        ALLIANCE_NUMBER = "";
-        PRELOAD = 0;
-        GROUND_INTAKE = "";
-        AUTO_ARTIFACTS_MADE = 0;
-        AUTO_ARTIFACTS_MISSED = 0;
-        AUTO_OFF_LINE = false;
-        AUTO_PATTERN_AT_END = 0;
-        TELE_ARTIFACTS_MADE = 0;
-        TELE_ARTIFACTS_MISSED = 0;
-        ENDGAME_PARK = "";
-        END_MATCH_PATTERN = 0;
-        DEFENSE_RATING = "";
-        COMMENTS = "";
-      }
-      eventEmitter.emit("submit");
-      console.log("Submitted data:", theData);
-    });
+  // fb.addEmitter()
+  //   .open("scouting")
+  //   .applyTo("hello")
+  //   .add(theData)
+  //   .commit()
+  //   .then(() => {
+  //     Alert.alert("Success!", "Data submitted successfully.");
+  //     {
+  //       SCOUTER_NAME = "";
+  //       MATCH_PATTERN = "";
+  //       TEAM_NUMBER = "";
+  //       MATCH_NUMBER = "";
+  //       STARTING_POSITION = "";
+  //       ALLIANCE = "";
+  //       ALLIANCE_NUMBER = "";
+  //       PRELOAD = "";
+  //       GROUND_INTAKE = "";
+  //       AUTO_ARTIFACTS_MADE = 0;
+  //       AUTO_ARTIFACTS_MISSED = 0;
+  //       AUTO_OFF_LINE = false;
+  //       AUTO_PATTERN_AT_END = 0;
+  //       TELE_ARTIFACTS_MADE = 0;
+  //       TELE_ARTIFACTS_MISSED = 0;
+  //       ENDGAME_PARK = "";
+  //       END_MATCH_PATTERN = 0;
+  //       DEFENSE_RATING = "";
+  //       COMMENTS = "";
+  //     }
+  //     eventEmitter.emit("submit");
+  //     console.log("Submitted data:", theData);
+  //   });
+  await setDoc(
+    doc(db, "scouting", currentEvent, "matches", docID),
+    theData,
+  ).then(() => {
+    Alert.alert("Success!", "Data submitted successfully.");
+    {
+      SCOUTER_NAME = "";
+      SCOUTER_TEAM = "";
+      MATCH_PATTERN = "";
+      TEAM_NUMBER = "";
+      MATCH_NUMBER = "";
+      STARTING_POSITION = "";
+      ALLIANCE = "";
+      ALLIANCE_NUMBER = "";
+      PRELOAD = "";
+      GROUND_INTAKE = "";
+      AUTO_ARTIFACTS_MADE = 0;
+      AUTO_ARTIFACTS_MISSED = 0;
+      AUTO_OFF_LINE = false;
+      AUTO_PATTERN_AT_END = 0;
+      TELE_ARTIFACTS_MADE = 0;
+      TELE_ARTIFACTS_MISSED = 0;
+      ENDGAME_PARK = "";
+      END_MATCH_PATTERN = 0;
+      DEFENSE_RATING = "";
+      COMMENTS = "";
+    }
+    eventEmitter.emit("submit");
+    console.log("Submitted data:", theData);
+  });
 };
 
 //MAKE SURE TO FIND OUT IF I REALLY NEED THIS RECURSIVE PARAMETER
@@ -237,12 +275,13 @@ const styles = StyleSheet.create({
 
 const PreMatch = () => {
   const [scouterName, setScouterName] = useState("");
+  const [scouterTeam, setScouterTeam] = useState("");
   const [pattern, setPattern] = useState("");
   const [teamNumber, setTeamNumber] = useState("");
   const [matchNumber, setMatchNumber] = useState(""); //so it doesn't just default to 0 on the screen?!
   const [alliance, setAlliance] = useState(null);
   const [allianceNumber, setAllianceNumber] = useState(""); //blue 1/2, red 1/2
-  const [preloadNum, setPreloadNum] = useState(0);
+  const [preloadNum, setPreloadNum] = useState("");
   const [groundIntake, setGroundIntake] = useState("");
   const [startingPosition, setStartingPosition] = useState("");
   const SCOUTERS = [
@@ -277,6 +316,38 @@ const PreMatch = () => {
   ];
   const [filteredScouters, setFilteredScouters] = useState(SCOUTERS);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const ECLIPTIC = [
+    "Alankrita Negi",
+    "Alex Rodriguez",
+    "Atharv Srivastava",
+    "Bhavika Jagetia",
+    "Caleb Seibert",
+    "Christian Wheeler",
+    "Grant Stone",
+    "Hunter Dubois",
+    "Jack Puckett",
+    "Katya Kessler",
+    "Lincoln Carroll",
+    "Quinn Harkness",
+    "Taarika Mukhi",
+    "Zaki Hassan",
+  ];
+  const ASTROBOTS = [
+    "Aarav Patel",
+    "Akhil Atyam",
+    "Alex Vo",
+    "Ansh Raghapur",
+    "Arnav Dixit",
+    "Dia Karthik",
+    "Ethan Chew",
+    "Eunice Kang",
+    "Heidi Nguyen",
+    "Humza Molvi",
+    "Jacob Truong",
+    "Scott Zheng",
+    "Tristan Suryono",
+    "Vyom Parikh",
+  ];
 
   const handleScouterNameChange = (text) => {
     setScouterName(text);
@@ -299,6 +370,15 @@ const PreMatch = () => {
     setDropdownVisible(false);
     handleScouterNameChange(name);
     console.log("Selected scouter:", name);
+    if (ECLIPTIC.includes(name)) {
+      setScouterTeam("Ecliptic");
+      SCOUTER_TEAM = "Ecliptic";
+    } else if (ASTROBOTS.includes(name)) {
+      setScouterTeam("Astrobots");
+      SCOUTER_TEAM = "Astrobots";
+    }
+
+    console.log("Scouter team:", SCOUTER_TEAM);
   };
 
   const handleScouterInputBlur = () => {
@@ -325,7 +405,7 @@ const PreMatch = () => {
       setMatchNumber("");
       setAlliance(null);
       setAllianceNumber("");
-      setPreloadNum(0);
+      setPreloadNum("");
       setGroundIntake("");
       setStartingPosition("");
     };
@@ -600,7 +680,7 @@ const PreMatch = () => {
               console.log("Selected starting position:", STARTING_POSITION);
             }}
           >
-            <Text style={styles.text}>No Show</Text>
+            <Text style={styles.text}>N/A</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -998,7 +1078,7 @@ const Auto = () => {
             onPress={() => {
               setAutoPatternAtEnd(autoPatternAtEnd + 1);
               AUTO_PATTERN_AT_END++;
-              console.log("Auto pattern", AUTO_PATTERN_AT_END);
+              console.log("Auto pattern:", AUTO_PATTERN_AT_END);
             }}
           >
             <Text style={styles.text}>+</Text>
@@ -1021,7 +1101,7 @@ const Auto = () => {
             onPress={() => {
               setAutoPatternAtEnd(autoPatternAtEnd - 1);
               AUTO_PATTERN_AT_END--;
-              console.log("Auto pattern", AUTO_PATTERN_AT_END);
+              console.log("Auto pattern:", AUTO_PATTERN_AT_END);
             }}
           >
             <Text style={styles.text}>-</Text>
@@ -1169,25 +1249,173 @@ const Endgame = () => {
           {
             flexDirection: "column",
             justifyContent: "space-evenly",
-            maxHeight: "50%",
+            maxHeight: "40%",
           },
         ]}
       >
-        <View>
-          <Text style={styles.text}>Park</Text>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: colors.CSPgreen,
+              padding: 5,
+              borderRadius: 10,
+              borderColor: colors.darkCSPgreen,
+              borderWidth: 2,
+              width: "30%",
+            }}
+          >
+            <Text style={styles.text}>Park</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              width: "50%",
+              padding: 5,
+              // paddingRight: 0,
+              gap: 5,
+              // justifyContent: "space-evenly",
+            }}
+          >
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { width: "33%" },
+                endgamePark === "None"
+                  ? {
+                      borderColor: "black",
+                      backgroundColor: colors.artifactpurple,
+                    }
+                  : {
+                      borderColor: colors.darkCSPgreen,
+                      backgroundColor: colors.CSPgreen,
+                    },
+              ]}
+              onPress={() => {
+                setEndgamePark("None");
+                ENDGAME_PARK = "None";
+                console.log("Endgame park:", ENDGAME_PARK);
+              }}
+            >
+              <Text style={styles.text}>None</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { width: "33%" },
+                endgamePark === "Partial"
+                  ? {
+                      borderColor: "black",
+                      backgroundColor: colors.artifactpurple,
+                    }
+                  : {
+                      borderColor: colors.darkCSPgreen,
+                      backgroundColor: colors.CSPgreen,
+                    },
+              ]}
+              onPress={() => {
+                setEndgamePark("Partial");
+                ENDGAME_PARK = "Partial";
+                console.log("Endgame park:", ENDGAME_PARK);
+              }}
+            >
+              <Text style={styles.text}>Partial</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                { width: "33%" },
+                endgamePark === "Full"
+                  ? {
+                      borderColor: "black",
+                      backgroundColor: colors.artifactpurple,
+                    }
+                  : {
+                      borderColor: colors.darkCSPgreen,
+                      backgroundColor: colors.CSPgreen,
+                    },
+              ]}
+              onPress={() => {
+                setEndgamePark("Full");
+                ENDGAME_PARK = "Full";
+                console.log("Endgame park:", ENDGAME_PARK);
+              }}
+            >
+              <Text style={styles.text}>Full</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignSelf: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              alignSelf: "center",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+              onPress={() => {
+                setEndMatchPattern(endMatchPattern + 1);
+                END_MATCH_PATTERN++;
+                console.log("Endgame pattern:", END_MATCH_PATTERN);
+              }}
+            >
+              <Text style={styles.text}>+</Text>
+            </TouchableOpacity>
+            <View
+              style={{
+                alignItems: "center",
+                width: "40%",
+                backgroundColor: colors.artifactpurple,
+                padding: 5,
+                borderRadius: 10,
+                borderColor: "black",
+                borderWidth: 2,
+              }}
+            >
+              <Text style={styles.text}>Pattern: {endMatchPattern}</Text>
+            </View>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+              onPress={() => {
+                setEndMatchPattern(endMatchPattern - 1);
+                END_MATCH_PATTERN--;
+                console.log("Endgame pattern:", END_MATCH_PATTERN);
+              }}
+            >
+              <Text style={styles.text}>-</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
   );
 };
 
-const Comments = () => {
+const Comments = ({ navigation }) => {
   const [comments, setComments] = useState("");
   const [defenseRating, setDefenseRating] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     const resetCommentData = () => {
-      console.log("Resetting endgame data");
+      console.log("Resetting comment data");
       setComments("");
       setDefenseRating("");
     };
@@ -1254,9 +1482,15 @@ const Comments = () => {
                     },
               ]}
               onPress={() => {
-                setDefenseRating("1");
-                DEFENSE_RATING = "1";
-                console.log("Defense rating:", DEFENSE_RATING);
+                if (defenseRating === "1") {
+                  setDefenseRating("0");
+                  DEFENSE_RATING = "0";
+                  console.log("Defense rating:", DEFENSE_RATING);
+                } else {
+                  setDefenseRating("1");
+                  DEFENSE_RATING = "1";
+                  console.log("Defense rating:", DEFENSE_RATING);
+                }
               }}
             >
               <Text style={styles.text}>★</Text>
@@ -1359,21 +1593,45 @@ const Comments = () => {
         <View
           style={{
             width: "100%",
-            height: "90%",
+            height: "60%",
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
           <TextInput
-            style={[styles.textInput, { height: "80%" }]}
+            style={[styles.textInput, { height: "90%" }]}
             placeholder="Comments"
+            multiline={true}
             value={comments}
             onChangeText={(text) => {
               setComments(text);
               COMMENTS = text;
             }}
+            onBlur={() => console.log("Comments:", COMMENTS)}
           />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            gap: 5,
+            padding: 5,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            onPress={() => {
+              theSubmit(submitted);
+              setSubmitted(false);
+              navigation.navigate("Pre-Match");
+              console.log("Attempted submit");
+            }}
+          >
+            <Text style={styles.text}>Submit</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
