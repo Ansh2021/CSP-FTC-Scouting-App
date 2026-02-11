@@ -14,7 +14,7 @@ const app = express();
 // app.use(cors({ origin: 'http://your-frontend-domain.com' })); // Restrict to specific origin
 app.use(
   cors({
-    origin: "*", // Allow all origins (for development only)
+    origin: "https://csp-ftc-scout.web.app", // Allow all origins (for development only)
   }),
 );
 app.use(express.json()); // Parse JSON bodies
