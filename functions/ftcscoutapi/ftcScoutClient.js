@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client/core";
+import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import fetch from "cross-fetch";
 
 const FTCSCOUT_URL = process.env.FTCSCOUT_URL;

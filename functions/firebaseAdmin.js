@@ -1,20 +1,28 @@
 //if you're seeing this, thanks man (you know who you are) :D
 
 import admin from "firebase-admin";
+import { defineSecret } from "firebase-functions/params";
 
-const serviceAccount = {
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-};
+export const FIREBASE_PROJECT_ID = defineSecret("FIREBAS_PROJECT_ID");
+export const FIREBASE_PRIVATE_KEY = defineSecret("FIREBAS_PRIVATE_KEY");
+export const FIREBASE_CLIENT_EMAIL = defineSecret("FIREBAS_CLIENT_EMAIL");
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
+export function getAdminApp() {
+  const serviceAccount = {
+    projectId: FIREBASE_PROJECT_ID.value(),
+    privateKey: FIREBASE_PRIVATE_KEY.value.replace(/\\n/g, "\n"),
+    clientEmail: FIREBASE_CLIENT_EMAIL.value(),
+  };
+
+  if (!admin.apps.length) {
+    return admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+  }
+  return;
 }
 
-export const db = admin.firestore();
+// export const db = admin.firestore();
 
 // Your web app's Firebase configuration
 // const firebaseConfig = {

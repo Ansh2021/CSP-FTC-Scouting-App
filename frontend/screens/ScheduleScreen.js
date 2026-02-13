@@ -24,7 +24,7 @@ export default function ScheduleScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Schedule</Text>
+      <Text style={styles.text}>Schedule: {currentEvent}</Text>
       <ScrollView showsVerticalScrollIndicator={false}>
         <DataTable>
           <DataTable.Header>

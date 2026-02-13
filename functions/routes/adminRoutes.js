@@ -6,7 +6,7 @@ import {
   getSchedule,
   getTeamStats,
   getEventStats,
-} from "../ftcscoutapi/ftcscoutcontroller.js";
+} from "../ftcscoutapi/ftcScoutController.js";
 
 const router = express.Router();
 

@@ -8,7 +8,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "firebase-init": "firebase init",
-    "firebase-deploy": "firebase deploy"
+    "deploy": "firebase deploy --only functions"
   },
   "dependencies": {
     "@blazejkustra/react-native-alert": "^1.0.0",

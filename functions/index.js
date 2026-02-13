@@ -1,32 +1,41 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import express from "express";
+import cors from "cors";
+import adminRoutes from "./routes/adminRoutes.js";
+import { requireAdmin } from "./middleware/adminAuthorization.js";
+import { onRequest } from "firebase-functions/v2/https";
+import {
+  getAdminApp,
+  FIREBASE_CLIENT_EMAIL,
+  FIREBASE_PRIVATE_KEY,
+  FIREBASE_PROJECT_ID,
+} from "./firebaseAdmin.js";
 
-const {setGlobalOptions} = require("firebase-functions");
-const {onRequest} = require("firebase-functions/https");
-const logger = require("firebase-functions/logger");
+// const PORT = process.env.PORT || 3000;
+const app = express();
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
-setGlobalOptions({ maxInstances: 10 });
+// Middleware
+// app.use(cors({ origin: 'http://your-frontend-domain.com' })); // Restrict to specific origin
+app.use(
+  cors({
+    origin: [
+      "https://csp-ftc-scout.web.app",
+      "https://csp-ftc-scout.firebaseapp.com/",
+    ], // Allow all origins (for development only)
+  }),
+);
+app.use(express.json()); // Parse JSON bodies
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+// Test route
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is running!" });
+});
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+app.use("/api/admin", adminRoutes);
+
+export const api = onRequest(
+  {
+    // timeoutSeconds: 120,
+    secrets: [FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY, FIREBASE_PROJECT_ID],
+  },
+  app,
+);

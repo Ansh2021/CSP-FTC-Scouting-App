@@ -67,6 +67,7 @@ export default function AdminDashboard() {
     }
     console.log("Schedule update requested for event code:", eventCode);
 
+    //TODO: GET RID OF THE API_URL VAR BELOW
     const response = await fetch(`${API_URL}/api/admin/update-schedule`, {
       method: "POST",
       headers: {
