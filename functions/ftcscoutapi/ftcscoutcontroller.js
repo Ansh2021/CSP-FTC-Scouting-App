@@ -1,4 +1,4 @@
-import { ftcScoutClient } from "./ftcScoutClient.js";
+import { ftcScoutClient } from "./ftcscoutclient.js";
 import {
   GET_SCHEDULE,
   GET_TEAM_STATS,
