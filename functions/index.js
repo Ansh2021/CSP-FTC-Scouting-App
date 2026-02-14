@@ -34,7 +34,7 @@ app.use("/api/admin", adminRoutes);
 
 export const api = onRequest(
   {
-    // timeoutSeconds: 120,
+    timeoutSeconds: 120,
     secrets: [FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY, FIREBASE_PROJECT_ID],
   },
   app,

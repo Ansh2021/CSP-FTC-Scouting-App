@@ -12,7 +12,7 @@ export default function AdminLoginStack() {
       <Stack.Screen
         name="AdminLogin"
         component={AdminLoginScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, title: "Login" }}
       />
       <Stack.Screen
         name="AdminDashboard"
@@ -21,6 +21,7 @@ export default function AdminLoginStack() {
           headerBackVisible: false,
           gestureEnabled: false,
           headerShown: false,
+          title: "Dashboard",
         }}
       />
     </Stack.Navigator>
