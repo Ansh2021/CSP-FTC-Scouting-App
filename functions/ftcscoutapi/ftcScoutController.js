@@ -1,10 +1,9 @@
-import { ftcScoutClient } from "./ftcscoutclient.js";
+import { ftcScoutClient } from "./ftcScoutClient.js";
 import {
   GET_SCHEDULE,
   GET_TEAM_STATS,
   GET_EVENT_STATS,
-} from "./ftcscoutqueries.js";
-// import { db } from "../firebase.js";
+} from "./ftcScoutQueries.js";
 import { getDB } from "../firebase.js";
 
 export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {

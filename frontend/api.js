@@ -7,6 +7,7 @@
 //     ? process.env.EXPO_PUBLIC_API_URL
 //     : process.env.EXPO_PUBLIC_API_URL_PHYSICAL;
 
-export const API_URL = "https://api-ga7rasuchq-uc.a.run.app/";
+// export const API_URL = "https://api-ga7rasuchq-uc.a.run.app/";
 
-//https://us-central1-csp-ftc-scout.cloudfunctions.net/api
+export const API_URL =
+  "https://us-central1-csp-ftc-scout.cloudfunctions.net/api";

@@ -17,7 +17,7 @@ export default function ScheduleScreen() {
         .open("schedule")
         .getByID(currentEvent);
       setSchedule(scheduleData.matches);
-      // console.log("schedule state:", schedule);
+      console.log("schedule state:", schedule);
     }
     fetchSchedule();
   }, []);

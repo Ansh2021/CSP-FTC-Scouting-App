@@ -23,6 +23,7 @@ export default function AdminLoginScreen() {
     let token;
     if (!password) {
       Alert.alert("Error", "YOU SHALL NOT PASS");
+      console.log("API URL", API_URL);
       return;
     }
 
