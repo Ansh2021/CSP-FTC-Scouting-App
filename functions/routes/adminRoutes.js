@@ -7,8 +7,12 @@ import {
   getTeamStats,
   getEventStats,
 } from "../ftcscoutapi/ftcScoutController.js";
+import { defineSecret } from "firebase-functions/params";
 
 const router = express.Router();
+
+export const ADMINHASH = defineSecret("ADMIN_HASHED_PASSWORD");
+export const JWT_SECRET = defineSecret("JWT_SECRET");
 
 router.post("/login", async (req, res) => {
   const { password } = req.body;
@@ -19,16 +23,27 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ error: "Password is required" });
   }
 
-  const isValid = await bcrypt.compare(
-    password,
-    process.env.ADMIN_HASHED_PASSWORD,
-  );
+  const adminHash = ADMINHASH.value() || "";
+  console.log("given password", password);
+  console.log("admin hash", adminHash);
+  // console.log(
+  //   "password type:",
+  //   typeof password,
+  //   "hash type:",
+  //   typeof adminHash,
+  // );
+  if (!adminHash) {
+    throw new Error("ADMINHASH not set");
+  }
+
+  const isValid = await bcrypt.compare(password, adminHash);
 
   if (!isValid) {
     return res.status(401).json({ error: "Invalid password" });
   }
 
-  const token = jwt.sign({ role: "admin" }, process.env.JWT_SECRET, {
+  const jwtSecret = JWT_SECRET.value();
+  const token = jwt.sign({ role: "admin" }, jwtSecret, {
     expiresIn: "2h",
   });
   res.json({ token });

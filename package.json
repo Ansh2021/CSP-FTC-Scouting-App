@@ -20,7 +20,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "firebase-init": "firebase init",
     "firebase-deploy": "firebase deploy",
-    "firebase-functions": "firebase init functions"
+    "firebase-functions": "firebase init functions",
+    "build:web": "cd frontend && npx expo export --platform web",
+    "deploy:hosting": "npm run build:web && firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy": "npm run build:web && firebase deploy"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",

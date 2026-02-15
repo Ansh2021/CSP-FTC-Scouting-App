@@ -1,4 +1,4 @@
-import { ftcScoutClient } from "./ftcScoutClient.js";
+import { getFTCScoutClient } from "./ftcScoutClient.js";
 import {
   GET_SCHEDULE,
   GET_TEAM_STATS,
@@ -8,6 +8,7 @@ import { getDB } from "../firebase.js";
 
 export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
   const db = getDB();
+  const ftcScoutClient = getFTCScoutClient();
 
   const { data } = await ftcScoutClient.query({
     query: GET_SCHEDULE,
@@ -41,6 +42,7 @@ export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
 
 export async function getTeamStats(number, season) {
   const db = getDB();
+  const ftcScoutClient = getFTCScoutClient();
 
   const { data } = await ftcScoutClient.query({
     query: GET_TEAM_STATS,
@@ -72,6 +74,7 @@ export async function getTeamStats(number, season) {
 
 export async function getEventStats(eventByCodeSeason2, eventByCodeCode2) {
   const db = getDB();
+  const ftcScoutClient = getFTCScoutClient();
 
   const { data } = await ftcScoutClient.query({
     query: GET_EVENT_STATS,

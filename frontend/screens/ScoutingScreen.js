@@ -1622,7 +1622,10 @@ const Comments = ({ navigation }) => {
           }}
         >
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: colors.CSPgreen }]}
+            style={[
+              styles.button,
+              { backgroundColor: colors.CSPgreen, width: "80%" },
+            ]}
             onPress={() => {
               theSubmit(submitted);
               setSubmitted(false);
