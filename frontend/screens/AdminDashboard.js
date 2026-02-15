@@ -24,9 +24,10 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
-import { API_URL } from "../api";
 import { colors } from "../themes/colors";
 import Alert from "@blazejkustra/react-native-alert";
+
+const API_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
 export default function AdminDashboard() {
   const [adminToken, setAdminToken] = useState(null);
@@ -68,7 +69,7 @@ export default function AdminDashboard() {
     console.log("Schedule update requested for event code:", eventCode);
 
     //TODO: GET RID OF THE API_URL VAR BELOW
-    const response = await fetch(`${API_URL}/api/admin/update-schedule`, {
+    const response = await fetch(`/api/admin/update-schedule`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${adminToken}`,
@@ -101,7 +102,7 @@ export default function AdminDashboard() {
     }
     console.log("Stats requested for team:", teamNumber);
 
-    const response = await fetch(`${API_URL}/api/admin/team-stats`, {
+    const response = await fetch(`/api/admin/team-stats`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${adminToken}`,
@@ -135,7 +136,7 @@ export default function AdminDashboard() {
 
     console.log("Event stats requested for event code:", eventCode);
 
-    const response = await fetch(`${API_URL}/api/admin/event-stats`, {
+    const response = await fetch(`/api/admin/event-stats`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${adminToken}`,

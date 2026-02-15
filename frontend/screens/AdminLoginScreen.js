@@ -8,11 +8,13 @@ import {
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { API_URL } from "../api";
+// import { API_URL } from "../api";
 import { colors } from "../themes/colors";
 import Alert from "@blazejkustra/react-native-alert";
 
 import * as SecureStore from "expo-secure-store";
+
+const API_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
 export default function AdminLoginScreen() {
   const [password, setPassword] = useState("");
@@ -34,7 +36,7 @@ export default function AdminLoginScreen() {
 
     try {
       setLoading(true);
-      const res = await fetch(`${API_URL}/api/admin/login`, {
+      const res = await fetch(`/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
