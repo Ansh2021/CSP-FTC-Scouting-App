@@ -261,6 +261,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    height: "100%",
+    fontFamily: "Montserrat",
+    fontWeight: 400,
+    textAlign: "center",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 1,
+    flexWrap: "wrap",
+  },
   textInput: {
     backgroundColor: "#fff",
     padding: 10,
@@ -512,7 +525,7 @@ const PreMatch = () => {
               );
             }}
           >
-            <Text style={styles.text}>Red</Text>
+            <Text style={styles.buttonText}>Red</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -533,7 +546,7 @@ const PreMatch = () => {
               );
             }}
           >
-            <Text style={styles.text}>Blue</Text>
+            <Text style={styles.buttonText}>Blue</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -638,7 +651,7 @@ const PreMatch = () => {
               console.log("Selected starting position:", STARTING_POSITION);
             }}
           >
-            <Text style={styles.text}>Classifier</Text>
+            <Text style={styles.buttonText}>Class</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -787,7 +800,7 @@ const PreMatch = () => {
               width: "40%",
             }}
           >
-            <Text style={styles.text}>Match Pattern</Text>
+            <Text style={styles.text}>Pattern</Text>
           </View>
           <TouchableOpacity
             style={[
@@ -818,7 +831,7 @@ const PreMatch = () => {
               console.log("Selected pattern:", MATCH_PATTERN);
             }}
           >
-            <Text style={styles.text}>PPG</Text>
+            <Text style={[styles.text, { fontSize: 12 }]}>PPG</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -849,7 +862,7 @@ const PreMatch = () => {
               console.log("Selected pattern:", MATCH_PATTERN);
             }}
           >
-            <Text style={styles.text}>PGP</Text>
+            <Text style={[styles.text, { fontSize: 12 }]}>PGP</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -880,7 +893,7 @@ const PreMatch = () => {
               console.log("Selected pattern:", MATCH_PATTERN);
             }}
           >
-            <Text style={styles.text}>GPP</Text>
+            <Text style={[styles.text, { fontSize: 12 }]}>GPP</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -1020,7 +1033,7 @@ const Auto = () => {
               width: "40%",
             }}
           >
-            <Text style={styles.text}>Auto Off Line</Text>
+            <Text style={styles.text}>Off Line</Text>
           </View>
           <TouchableOpacity
             style={[
@@ -1133,7 +1146,7 @@ const TeleOp = () => {
           {
             flexDirection: "column",
             justifyContent: "space-evenly",
-            maxHeight: "50%",
+            maxHeight: "40%",
           },
         ]}
       >
@@ -1227,8 +1240,6 @@ const TeleOp = () => {
 };
 
 const Endgame = () => {
-  // let ENDGAME_PARK = ""; none (false), partial, full
-  // let END_MATCH_PATTERN = 0;
   const [endgamePark, setEndgamePark] = useState("");
   const [endMatchPattern, setEndMatchPattern] = useState(0);
 
@@ -1269,7 +1280,7 @@ const Endgame = () => {
               borderRadius: 10,
               borderColor: colors.darkCSPgreen,
               borderWidth: 2,
-              width: "30%",
+              width: "25%",
             }}
           >
             <Text style={styles.text}>Park</Text>
@@ -1277,7 +1288,7 @@ const Endgame = () => {
           <View
             style={{
               flexDirection: "row",
-              width: "50%",
+              width: "75%",
               padding: 5,
               // paddingRight: 0,
               gap: 5,
@@ -1297,6 +1308,7 @@ const Endgame = () => {
                       borderColor: colors.darkCSPgreen,
                       backgroundColor: colors.CSPgreen,
                     },
+                // { fontSize: 14 },
               ]}
               onPress={() => {
                 setEndgamePark("None");
@@ -1319,6 +1331,7 @@ const Endgame = () => {
                       borderColor: colors.darkCSPgreen,
                       backgroundColor: colors.CSPgreen,
                     },
+                // { fontSize: 14 },
               ]}
               onPress={() => {
                 setEndgamePark("Partial");
@@ -1326,7 +1339,7 @@ const Endgame = () => {
                 console.log("Endgame park:", ENDGAME_PARK);
               }}
             >
-              <Text style={styles.text}>Partial</Text>
+              <Text style={styles.text}>Part</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -1341,6 +1354,7 @@ const Endgame = () => {
                       borderColor: colors.darkCSPgreen,
                       backgroundColor: colors.CSPgreen,
                     },
+                // { fontSize: 14 },
               ]}
               onPress={() => {
                 setEndgamePark("Full");
@@ -1458,7 +1472,7 @@ const Comments = ({ navigation }) => {
           <View
             style={{
               flexDirection: "row",
-              width: "50%",
+              width: "65%",
               gap: 5,
               padding: 5,
             }}
@@ -1660,10 +1674,10 @@ const ScoutingScreen = () => {
               height: 4,
             },
           }}
-          initialRouteName="Pre-Match"
+          initialRouteName="Setup"
         >
           <Tab.Screen
-            name="Pre-Match"
+            name="Setup"
             component={PreMatch}
             options={{ gestureEnabled: true }}
           />
@@ -1683,7 +1697,7 @@ const ScoutingScreen = () => {
             options={{ gestureEnabled: true }}
           />
           <Tab.Screen
-            name="Comments"
+            name="Notes"
             component={Comments}
             options={{ gestureEnabled: true }}
           />

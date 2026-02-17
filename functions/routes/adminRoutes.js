@@ -71,7 +71,7 @@ router.post("/update-schedule", requireAdmin, async (req, res) => {
     console.log("Schedule request body:", req.body);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -97,7 +97,7 @@ router.post("/team-stats", requireAdmin, async (req, res) => {
     console.log("Team stats request body:", req.body);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -123,7 +123,7 @@ router.post("/event-stats", requireAdmin, async (req, res) => {
     console.log("Event stats request body:", req.body);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: err.message });
   }
 });
 

@@ -10,6 +10,9 @@ export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
   const db = getDB();
   const ftcScoutClient = getFTCScoutClient();
 
+  if (!eventByCodeSeason2 || !eventByCodeCode2)
+    throw new Error("Missing year or eventcode");
+
   const { data } = await ftcScoutClient.query({
     query: GET_SCHEDULE,
     variables: {
@@ -17,6 +20,10 @@ export async function getSchedule(eventByCodeSeason2, eventByCodeCode2) {
       eventByCodeCode2,
     },
   });
+
+  if (!data || !data.eventByCode) {
+    throw new Error("No data returned from GraphQL API for event schedule");
+  }
 
   const matches = data.eventByCode.matches.map((match) => ({
     match: match.matchNum,

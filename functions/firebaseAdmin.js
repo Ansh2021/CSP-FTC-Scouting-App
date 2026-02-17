@@ -10,7 +10,7 @@ export const FIREBASE_CLIENT_EMAIL = defineSecret("FIREBAS_CLIENT_EMAIL");
 export function getAdminApp() {
   const serviceAccount = {
     projectId: FIREBASE_PROJECT_ID.value(),
-    privateKey: FIREBASE_PRIVATE_KEY.value.replace(/\\n/g, "\n"),
+    privateKey: FIREBASE_PRIVATE_KEY.value().replace(/\\n/g, "\n"),
     clientEmail: FIREBASE_CLIENT_EMAIL.value(),
   };
 

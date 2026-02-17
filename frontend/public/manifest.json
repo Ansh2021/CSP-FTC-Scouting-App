@@ -1,5 +1,5 @@
 {
-  "name": "CSP FTC Scouting App",
+  "name": "CSP FTC Scout",
   "short_name": "CSPFTCScout",
   "description": "A scouting app for FTC teams 16585 and 22327.",
   "start_url": ".",
@@ -8,7 +8,12 @@
   "theme_color": "#0a0941",
   "icons": [
     {
-      "src": "./columbusspaceprogram.png",
+      "src": "../assets/icons/apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180"
+    },
+    {
+      "src": "../assets/icons/csp-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
