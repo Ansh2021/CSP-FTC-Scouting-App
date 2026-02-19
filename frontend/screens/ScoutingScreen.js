@@ -1643,7 +1643,7 @@ const Comments = ({ navigation }) => {
             onPress={() => {
               theSubmit(submitted);
               setSubmitted(false);
-              navigation.navigate("Pre-Match");
+              navigation.navigate("Setup");
               console.log("Attempted submit");
             }}
           >
