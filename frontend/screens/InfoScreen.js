@@ -6,17 +6,16 @@ export default function InfoScreen() {
     <View style={styles.container}>
       <View style={styles.textContainer}>
         <Text style={styles.text}>
-          If you couldn't already tell, this is the FTC scouting app for FTC
-          teams 16585 and 22327. I built this app just because I got bored over
-          Winter Break but also because I'm just a nice guy.
+          If you couldn't already tell, this is the FTC scouting app (nicknamed
+          Flux because Priyanshu said so) for FTC teams 16585 and 22327. I built
+          this app not just because I got bored over Winter Break but also
+          because I'm just a nice guy.
           {"\n\n"}This app was built using React Native and Expo (although you
           probably didn't care about that) and yes it was heavily inspired by
-          the CSP FRC scouting app built by THE Priyanshu Biswal. {"\n\n"}Don't
+          the CSP FRC Scouting App built by THE Priyanshu Biswal. {"\n\n"}Don't
           even try cracking the password for the admin login (I will find you if
           you try). {"\n\n"}If there are any bugs, please reach out to me ASAP
-          so I can get it fixed and minimize the damage. {"\n\n"}Lastly, there
-          may or may not be easter eggs hidden throughout the app. Try finding
-          them (or not). {"\n\n"}Have fun! I guess.
+          so I can get it fixed and minimize the damage. {"\n\n"}Have fun!
         </Text>
         <Text
           style={{

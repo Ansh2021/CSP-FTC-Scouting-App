@@ -15,7 +15,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>Hello, Scouter!</Text>
+      <Text style={styles.welcomeText}>Welcome to Flux!</Text>
     </View>
   );
 }
