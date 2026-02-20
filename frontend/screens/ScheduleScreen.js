@@ -4,7 +4,7 @@ import { DataTable } from "react-native-paper";
 import { colors } from "../themes/colors";
 import * as fb from "../firebase.js";
 
-const currentEvent = "USGACOLLT"; //change this for state
+const currentEvent = "USGACMP"; //change this for state
 
 export default function ScheduleScreen() {
   const [schedule, setSchedule] = useState([]);

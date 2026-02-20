@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,8 +6,12 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import { NavigationIndependentTree } from "@react-navigation/native";
+import {
+  NavigationIndependentTree,
+  useIsFocused,
+} from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { EventEmitter } from "events";
 import Alert from "@blazejkustra/react-native-alert";
@@ -20,9 +24,8 @@ import { colors } from "../themes/colors";
 const Tab = createMaterialTopTabNavigator();
 const eventEmitter = new EventEmitter();
 
-const currentEvent = "USGACOLLT"; //change this for state
-const team = 19917; //plecholder
-const matchNUMBER = 1;
+// const currentEvent = "USGACMP"; //change this for state
+const currentEvent = "USGACOLLT";
 
 //prematch
 let SCOUTER_NAME = "";
@@ -941,12 +944,13 @@ const Auto = () => {
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
             onPress={() => {
-              setAutoArtifactsMade(autoArtifactsMade + 1);
-              AUTO_ARTIFACTS_MADE++;
+              if (autoArtifactsMade === 0) return;
+              setAutoArtifactsMade(autoArtifactsMade - 1);
+              AUTO_ARTIFACTS_MADE--;
               console.log("Auto made:", AUTO_ARTIFACTS_MADE);
             }}
           >
-            <Text style={styles.text}>+</Text>
+            <Text style={styles.text}>-</Text>
           </TouchableOpacity>
           <View
             style={{
@@ -964,12 +968,12 @@ const Auto = () => {
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
             onPress={() => {
-              setAutoArtifactsMade(autoArtifactsMade - 1);
-              AUTO_ARTIFACTS_MADE--;
+              setAutoArtifactsMade(autoArtifactsMade + 1);
+              AUTO_ARTIFACTS_MADE++;
               console.log("Auto made:", AUTO_ARTIFACTS_MADE);
             }}
           >
-            <Text style={styles.text}>-</Text>
+            <Text style={styles.text}>+</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -983,12 +987,13 @@ const Auto = () => {
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
             onPress={() => {
-              setAutoArtifactsMissed(autoArtifactsMissed + 1);
-              AUTO_ARTIFACTS_MISSED++;
+              if (autoArtifactsMissed === 0) return;
+              setAutoArtifactsMissed(autoArtifactsMissed - 1);
+              AUTO_ARTIFACTS_MISSED--;
               console.log("Auto missed:", AUTO_ARTIFACTS_MISSED);
             }}
           >
-            <Text style={styles.text}>+</Text>
+            <Text style={styles.text}>-</Text>
           </TouchableOpacity>
           <View
             style={{
@@ -1003,15 +1008,16 @@ const Auto = () => {
           >
             <Text style={styles.text}>Missed: {autoArtifactsMissed}</Text>
           </View>
+
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
             onPress={() => {
-              setAutoArtifactsMissed(autoArtifactsMissed - 1);
-              AUTO_ARTIFACTS_MISSED--;
+              setAutoArtifactsMissed(autoArtifactsMissed + 1);
+              AUTO_ARTIFACTS_MISSED++;
               console.log("Auto missed:", AUTO_ARTIFACTS_MISSED);
             }}
           >
-            <Text style={styles.text}>-</Text>
+            <Text style={styles.text}>+</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -1089,12 +1095,13 @@ const Auto = () => {
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
             onPress={() => {
-              setAutoPatternAtEnd(autoPatternAtEnd + 1);
-              AUTO_PATTERN_AT_END++;
+              if (autoPatternAtEnd === 0) return;
+              setAutoPatternAtEnd(autoPatternAtEnd - 1);
+              AUTO_PATTERN_AT_END--;
               console.log("Auto pattern:", AUTO_PATTERN_AT_END);
             }}
           >
-            <Text style={styles.text}>+</Text>
+            <Text style={styles.text}>-</Text>
           </TouchableOpacity>
           <View
             style={{
@@ -1109,15 +1116,16 @@ const Auto = () => {
           >
             <Text style={styles.text}>Pattern: {autoPatternAtEnd}</Text>
           </View>
+
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
             onPress={() => {
-              setAutoPatternAtEnd(autoPatternAtEnd - 1);
-              AUTO_PATTERN_AT_END--;
+              setAutoPatternAtEnd(autoPatternAtEnd + 1);
+              AUTO_PATTERN_AT_END++;
               console.log("Auto pattern:", AUTO_PATTERN_AT_END);
             }}
           >
-            <Text style={styles.text}>-</Text>
+            <Text style={styles.text}>+</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -1161,12 +1169,13 @@ const TeleOp = () => {
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
             onPress={() => {
-              setTeleArtifactsMade(teleArtifactsMade + 1);
-              TELE_ARTIFACTS_MADE++;
+              if (teleArtifactsMade === 0) return;
+              setTeleArtifactsMade(teleArtifactsMade - 1);
+              TELE_ARTIFACTS_MADE--;
               console.log("Teleop made:", TELE_ARTIFACTS_MADE);
             }}
           >
-            <Text style={styles.text}>+</Text>
+            <Text style={styles.text}>-</Text>
           </TouchableOpacity>
           <View
             style={{
@@ -1181,15 +1190,16 @@ const TeleOp = () => {
           >
             <Text style={styles.text}>Made: {teleArtifactsMade}</Text>
           </View>
+
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
             onPress={() => {
-              setTeleArtifactsMade(teleArtifactsMade - 1);
-              TELE_ARTIFACTS_MADE--;
+              setTeleArtifactsMade(teleArtifactsMade + 1);
+              TELE_ARTIFACTS_MADE++;
               console.log("Teleop made:", TELE_ARTIFACTS_MADE);
             }}
           >
-            <Text style={styles.text}>-</Text>
+            <Text style={styles.text}>+</Text>
           </TouchableOpacity>
         </View>
         <View
@@ -1203,12 +1213,13 @@ const TeleOp = () => {
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
             onPress={() => {
-              setTeleArtifactsMissed(teleArtifactsMissed + 1);
-              TELE_ARTIFACTS_MISSED++;
+              if (teleArtifactsMissed === 0) return;
+              setTeleArtifactsMissed(teleArtifactsMissed - 1);
+              TELE_ARTIFACTS_MISSED--;
               console.log("Teleop missed:", TELE_ARTIFACTS_MISSED);
             }}
           >
-            <Text style={styles.text}>+</Text>
+            <Text style={styles.text}>-</Text>
           </TouchableOpacity>
           <View
             style={{
@@ -1223,15 +1234,16 @@ const TeleOp = () => {
           >
             <Text style={styles.text}>Missed: {teleArtifactsMissed}</Text>
           </View>
+
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.CSPgreen }]}
             onPress={() => {
-              setTeleArtifactsMissed(teleArtifactsMissed - 1);
-              TELE_ARTIFACTS_MISSED--;
+              setTeleArtifactsMissed(teleArtifactsMissed + 1);
+              TELE_ARTIFACTS_MISSED++;
               console.log("Teleop missed:", TELE_ARTIFACTS_MISSED);
             }}
           >
-            <Text style={styles.text}>-</Text>
+            <Text style={styles.text}>+</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -1385,12 +1397,13 @@ const Endgame = () => {
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.CSPgreen }]}
               onPress={() => {
-                setEndMatchPattern(endMatchPattern + 1);
-                END_MATCH_PATTERN++;
+                if (endMatchPattern === 0) return;
+                setEndMatchPattern(endMatchPattern - 1);
+                END_MATCH_PATTERN--;
                 console.log("Endgame pattern:", END_MATCH_PATTERN);
               }}
             >
-              <Text style={styles.text}>+</Text>
+              <Text style={styles.text}>-</Text>
             </TouchableOpacity>
             <View
               style={{
@@ -1405,15 +1418,16 @@ const Endgame = () => {
             >
               <Text style={styles.text}>Pattern: {endMatchPattern}</Text>
             </View>
+
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.CSPgreen }]}
               onPress={() => {
-                setEndMatchPattern(endMatchPattern - 1);
-                END_MATCH_PATTERN--;
+                setEndMatchPattern(endMatchPattern + 1);
+                END_MATCH_PATTERN++;
                 console.log("Endgame pattern:", END_MATCH_PATTERN);
               }}
             >
-              <Text style={styles.text}>-</Text>
+              <Text style={styles.text}>+</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1607,7 +1621,7 @@ const Comments = ({ navigation }) => {
         <View
           style={{
             width: "100%",
-            height: "60%",
+            height: "70%",
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
@@ -1625,7 +1639,7 @@ const Comments = ({ navigation }) => {
             onBlur={() => console.log("Comments:", COMMENTS)}
           />
         </View>
-        <View
+        {/* <View
           style={{
             flexDirection: "row",
             width: "100%",
@@ -1649,8 +1663,170 @@ const Comments = ({ navigation }) => {
           >
             <Text style={styles.text}>Submit</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
+    </View>
+  );
+};
+
+const Submit = ({ navigation }) => {
+  const isFocused = useIsFocused();
+  const [submitted, setSubmitted] = useState(false);
+
+  return (
+    <View style={[styles.mainTabView, { justifyContent: "center" }]}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={[
+          styles.container,
+          {
+            flexDirection: "column",
+            justifyContent: "space-evenly",
+            maxHeight: "80%",
+            gap: 10,
+          },
+        ]}
+      >
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Scouter Name:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {SCOUTER_NAME}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Match Number:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {MATCH_NUMBER}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Alliance:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {ALLIANCE}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Alliance Number:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {ALLIANCE_NUMBER}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Team Number:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {TEAM_NUMBER}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Starting Position:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {STARTING_POSITION}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Preloads:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {PRELOAD}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Ground Intake:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {GROUND_INTAKE ? "Yes" : "No"}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Match Pattern:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {MATCH_PATTERN}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Auto Artifacts Made:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {AUTO_ARTIFACTS_MADE}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Auto Artifacts Missed:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {AUTO_ARTIFACTS_MISSED}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Auto Off Line:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {AUTO_OFF_LINE ? "Yes" : "No"}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Auto Pattern At End:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {AUTO_PATTERN_AT_END}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Tele Artifacts Made:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {TELE_ARTIFACTS_MADE}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Tele Artifacts Missed:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {TELE_ARTIFACTS_MISSED}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Endgame Park:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {ENDGAME_PARK}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Endgame Pattern:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {END_MATCH_PATTERN}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Defense Rating:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {DEFENSE_RATING}
+          </Text>
+        </Text>
+        <Text style={[styles.text, { color: "black", fontWeight: "bold" }]}>
+          {"Comments:"}{" "}
+          <Text style={[styles.text, { color: "black", fontWeight: "normal" }]}>
+            {COMMENTS}
+          </Text>
+        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            gap: 5,
+            padding: 5,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <TouchableOpacity
+            style={[
+              styles.button,
+              { backgroundColor: colors.CSPgreen, width: "90%" },
+            ]}
+            onPress={() => {
+              theSubmit(submitted);
+              setSubmitted(false);
+              navigation.navigate("Setup");
+              console.log("Attempted submit");
+            }}
+          >
+            <Text style={styles.text}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -1687,7 +1863,7 @@ const ScoutingScreen = () => {
             options={{ gestureEnabled: true }}
           />
           <Tab.Screen
-            name="TeleOp"
+            name="Tele"
             component={TeleOp}
             options={{ gestureEnabled: true }}
           />
@@ -1699,6 +1875,11 @@ const ScoutingScreen = () => {
           <Tab.Screen
             name="Notes"
             component={Comments}
+            options={{ gestureEnabled: true }}
+          />
+          <Tab.Screen
+            name="Submit"
+            component={Submit}
             options={{ gestureEnabled: true }}
           />
         </Tab.Navigator>
